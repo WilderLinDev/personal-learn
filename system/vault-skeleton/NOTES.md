@@ -1,6 +1,12 @@
 <!-- TEMPLATE -->
 # Notes
 
+## Language
+- Native: …
+- Target: …
+- Target level: … (CEFR A1–C2)
+- Conversation: target / mixed / native
+
 ## Preferences
 - …
 

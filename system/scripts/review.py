@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Review items for vault/topics/<slug>/reviews.json. Rules: system/reviews.md.
 
-  review.py due [--limit N]
+  review.py due [--limit N] [--summary]
   review.py answer <item-id>
   review.py grade <item-id> <again|hard|good|easy> <guess|unsure|sure>
-  review.py add <topic> <recall|why|apply> "<question>" "<answer>" [--source PATH]
+  review.py add <topic> <recall|why|apply|term> "<question>" "<answer>" [--source PATH]
   review.py stats
 
 --today YYYY-MM-DD overrides today's date (for testing).
@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TOPICS = ROOT / "vault" / "topics"
 GRADES = ("again", "hard", "good", "easy")
 CONFIDENCE = ("guess", "unsure", "sure")
-KINDS = ("recall", "why", "apply")
+KINDS = ("recall", "why", "apply", "term")
 
 
 def fail(msg):
@@ -87,6 +87,14 @@ def cmd_due(args, today):
         data = load(path)
         rows += [(i["due"], data["topic"], i) for i in data["items"] if i["due"] <= today]
     rows.sort(key=lambda r: (r[1], r[0], r[2]["id"]))
+    if args.summary:
+        if rows:
+            counts = {}
+            for _, topic, _ in rows:
+                counts[topic] = counts.get(topic, 0) + 1
+            detail = ", ".join(f"{t} {n}" for t, n in counts.items())
+            print(f"Review: {len(rows)} items due today ({detail}). Offer a review session at the start of this conversation.")
+        return
     for _, topic, i in rows[: args.limit]:
         print(f"{i['id']}\t{topic}\t{i['kind']}\t{i['question']}")
     print(f"# {len(rows)} due, showing {min(len(rows), args.limit)}")
@@ -149,7 +157,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--today", default=dt.date.today().isoformat())
     sub = p.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("due"); s.add_argument("--limit", type=int, default=10); s.set_defaults(f=cmd_due)
+    s = sub.add_parser("due"); s.add_argument("--limit", type=int, default=10)
+    s.add_argument("--summary", action="store_true"); s.set_defaults(f=cmd_due)
     s = sub.add_parser("answer"); s.add_argument("id"); s.set_defaults(f=cmd_answer)
     s = sub.add_parser("grade"); s.add_argument("id"); s.add_argument("grade", choices=GRADES)
     s.add_argument("confidence", choices=CONFIDENCE); s.set_defaults(f=cmd_grade)

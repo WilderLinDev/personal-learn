@@ -21,7 +21,7 @@
 }
 ```
 
-- `kind`: `recall` | `why` | `apply`. `confidence`: `guess` | `unsure` | `sure`. `grade`: `again` | `hard` | `good` | `easy`.
+- `kind`: `recall` | `why` | `apply` | `term`. `confidence`: `guess` | `unsure` | `sure`. `grade`: `again` | `hard` | `good` | `easy`.
 - `id` is `<slug>-<n>` and never reused. `log` is append-only.
 - A new item has `interval: 0` and is due today.
 

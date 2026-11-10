@@ -1,11 +1,13 @@
 # Notes
 
 ## Language
-- Conversation: Mandarin Chinese, or mixed Chinese/English. Chinese is often best for clarifying difficult ideas.
-- Lessons, reference documents, and records: clear, accessible English that is challenging but understandable. Preserve important English terms and explain them in Chinese when helpful.
-- Prefer layered explanations over sentence-by-sentence translation.
+- Native: zh-CN
+- Target: en
+- Target level: B1
+- Conversation: mixed
 
 ## Teaching preferences
+- Prefer layered explanations over sentence-by-sentence translation.
 - Teach across many disciplines, not only software engineering.
 - Explain mechanisms, assumptions, examples, and limitations.
 - Connect new topics to existing knowledge when the link is meaningful and accurate.

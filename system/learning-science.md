@@ -30,6 +30,17 @@ Evidence for the rules the skills add to [Teach](teach/SKILL.md). Accessed 2026-
 **Interleave only confusable items.** g ≈ 0.42 overall, strongest for similar categories; blocked practice can win when items differ (Brunmair & Richter, 2019).
 [Meta-analysis](https://www.psychologie.uni-wuerzburg.de/fileadmin/06020400/2019/Brunmair_Richter_in_press__2019_META-ANALYSIS_OF_INTERLEAVED_LEARNING.pdf)
 
+## Language
+
+**Pitch text to the reader's vocabulary.** About 95% known-word coverage is the minimum and 98% the optimum for comprehension (Hu & Nation, 2000; Laufer & Ravenhorst-Kalovski, 2010).
+[Overview](https://www.frontiersin.org/articles/10.3389/fpsyg.2022.800983/pdf)
+
+**Gloss new terms in the native language.** Native-language glosses support vocabulary learning at least as well as target-language glosses, mainly on immediate tests (Kim, Lee & Lee, 2024; Yanagisawa, Webb & Uchihara, 2020).
+[Kim et al.](https://www.todoele.net/bibliografia/relative-effects-l1-and-l2-glosses-l2-learning-meta-analysis)
+
+**Learn content in the target language.** Content-and-language-integrated learning improves the target language (d ≈ 0.63) while content learning stays comparable (d ≈ −0.06).
+[Meta-analysis](https://vufind-test.katalog.k.utb.cz/SummonRecord/FETCH-LOGICAL-c306t-2accdcf7adb907c10166feae284f6cd17126ca2b1e0baf85c6991771135fe6213)
+
 ## Excluded
 
 - **Pre-questions:** help only the exact questions asked (g ≈ 0.54), barely anything else (g ≈ 0.04) (St. Hilaire et al., 2023).

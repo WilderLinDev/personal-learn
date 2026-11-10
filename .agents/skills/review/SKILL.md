@@ -1,6 +1,6 @@
 ---
 name: review
-description: Run a spaced-review session over the learner's due items across all topics in this repository's vault. Use when the user wants to review, revise, or asks what is due.
+description: Spaced review of due items across all topics in this repository's vault. Use when items are due at the start of a conversation (offer it), or whenever the user wants to review, revise, be tested on past material, or asks what is due — in any language, e.g. "review", "复习", "考考我之前学的". Never wait for the user to name this skill.
 ---
 
 # Review
@@ -13,5 +13,7 @@ description: Run a spaced-review session over the learner's due items across all
    4. Ask `again` items once more at the end of the session.
 3. If an item turns out ambiguous or wrong, fix its question or answer in `reviews.json` with the learner's agreement.
 4. Commit with `review: <date>` per `vault/NOTES.md`, and report: items reviewed, misses, wrong `sure` answers, next due date.
+
+Language follows section 5 of the [tutor skill](../tutor/SKILL.md): answers in either language, graded on content only.
 
 Without a shell, read and update `vault/topics/*/reviews.json` by hand using [system/reviews.md](../../../system/reviews.md). Never show an answer before the learner has answered.
