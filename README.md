@@ -26,15 +26,21 @@ The long-term goal is to:
 5. **Separate truth from mastery.** A claim's verification status is not the same as the learner's mastery.
 6. **Preserve the learning journey.** Learning records are historical records; update canonical knowledge when understanding improves.
 7. **Save at meaningful boundaries.** Save when a lesson is completed or intentionally paused, not after every chat message.
-8. **Public by design.** This repository is public. Detailed learning records, progress, weak areas, preferences, and personal learning reflections are intentionally part of the published knowledge project. Do not add privacy-based redaction rules that remove this learning context.
+8. **Public by design.** Detailed learning records, progress, weak areas, preferences, and personal learning reflections are intentionally part of the published knowledge project.
 9. **Portable content.** Prefer Markdown, standard relative links, and standalone HTML. Do not make a proprietary note-taking app a required dependency.
 10. **No invented persistence.** An AI must verify successful GitHub writes before claiming that work was saved.
+
+## Automatic teaching
+
+Personal Learn includes its own teaching method in `.agents/skills/personal-learn/SKILL.md`. In a correctly configured ChatGPT Project, ordinary learning requests such as "Teach me ETF", "What is inflation?", "Help me review", or "Continue learning history" should automatically use this workflow. **You do not need to type `@Teach` each time.**
+
+The separate Teach plugin is optional. Its teaching approach has been integrated into Personal Learn, while GitHub remains the source of truth.
 
 ## Repository map
 
 | Path | Purpose |
 |---|---|
-| `AGENTS.md` | Repository-wide instructions for AI agents |
+| `AGENTS.md` | Repository-wide instructions and automatic learning-intent routing |
 | `MISSION.md` | Long-term learning mission |
 | `NOTES.md` | Teaching and interaction preferences |
 | `RESOURCES.md` | Curated learning sources |
@@ -47,7 +53,7 @@ The long-term goal is to:
 | `learning-records/` | Historical records of what was learned |
 | `reviews/QUEUE.md` | Spaced-review queue |
 | `assets/` | Shared lesson assets |
-| `.agents/skills/personal-learn/` | Portable Agent Skill for maintaining this system |
+| `.agents/skills/personal-learn/` | Portable Agent Skill with the teaching method and workflows |
 | `docs/` | Architecture, workflows, schemas, and setup guides |
 
 ## Start here
@@ -56,21 +62,19 @@ The long-term goal is to:
 
 1. Read [MISSION.md](MISSION.md) and [INDEX.md](INDEX.md).
 2. Browse [knowledge](knowledge/README.md), [topics](topics/README.md), and [learning records](learning-records/README.md).
-3. Use the repository with any Markdown viewer or a future static website. No Obsidian installation is required.
+3. Use the repository with GitHub's web interface or any Markdown viewer. No Obsidian installation is required.
 
 ### For an AI agent
 
 1. Read [AGENTS.md](AGENTS.md).
 2. Read [MISSION.md](MISSION.md), [NOTES.md](NOTES.md), and [INDEX.md](INDEX.md).
-3. Activate [the Personal Learn skill](.agents/skills/personal-learn/SKILL.md) when teaching, saving, connecting, reviewing, or maintaining knowledge.
-4. Follow [the AI workflow](docs/AI-WORKFLOW.md) and [knowledge schema](docs/KNOWLEDGE-SCHEMA.md).
+3. Activate [the Personal Learn skill](.agents/skills/personal-learn/SKILL.md) for learning, saving, connecting, reviewing, or maintaining knowledge.
+4. Follow [the AI workflow](docs/AI-WORKFLOW.md), [teaching method](docs/TEACHING-METHOD.md), and [knowledge schema](docs/KNOWLEDGE-SCHEMA.md).
 5. For ChatGPT Projects, copy [the project instructions](docs/CHATGPT-PROJECT-INSTRUCTIONS.md) into the Project's instructions and enable the GitHub connection for this repository.
 
-## ChatGPT Teach integration
+## ChatGPT setup
 
-The Teach plugin uses a stateful workspace with files such as `MISSION.md`, `RESOURCES.md`, `NOTES.md`, `lessons/`, `reference/`, `learning-records/`, and `assets/`. This repository deliberately preserves those familiar locations while adding a canonical Markdown knowledge layer.
-
-A GitHub connection is not the same thing as a local filesystem mount. When using Teach in ChatGPT, the agent must explicitly read and write this repository through the connected GitHub capability; it must not assume the plugin's current local directory is this repository. See [Teach integration](docs/TEACH-INTEGRATION.md).
+The one-time Project setup is documented in [ChatGPT Project Instructions](docs/CHATGPT-PROJECT-INSTRUCTIONS.md). Once configured, start learning chats inside that Project and use natural language. You do not need to manually invoke `@Teach`.
 
 ## Future website
 
