@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light;
+  --ink: #20252b;
+  --muted: #66717d;
+  --paper: #ffffff;
+  --surface: #f4f6f8;
+  --line: #dce2e8;
+  --accent: #315f8c;
+  --accent-soft: #eaf1f8;
+  --max-width: 760px;
+}
+* { box-sizing: border-box; }
+html { background: var(--surface); }
+body {
+  margin: 0 auto;
+  padding: 40px 20px 72px;
+  max-width: var(--max-width);
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font: 17px/1.72 Georgia, "Times New Roman", serif;
+}
+main { max-width: 680px; margin-inline: auto; }
+h1, h2, h3, nav, .eyebrow, .meta, .callout, table {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+h1 { margin: 0 0 18px; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.12; letter-spacing: -0.035em; }
+h2 { margin: 2.5em 0 .65em; padding-bottom: .35em; border-bottom: 1px solid var(--line); font-size: 1.45rem; line-height: 1.3; }
+h3 { margin: 1.8em 0 .5em; font-size: 1.12rem; }
+p, ul, ol { margin: 0 0 1.1em; }
+a { color: var(--accent); text-underline-offset: 3px; }
+.eyebrow { margin-bottom: 12px; color: var(--accent); font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.meta { color: var(--muted); font-size: .88rem; }
+.lede { color: #46515c; font-size: 1.18rem; line-height: 1.55; }
+.callout { margin: 1.6em 0; padding: 16px 18px; border-left: 3px solid var(--accent); background: var(--accent-soft); font-size: .96rem; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { background: var(--surface); }
+code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+code { padding: .12em .32em; background: var(--surface); border-radius: 4px; }
+pre { overflow-x: auto; padding: 16px; background: var(--surface); border-radius: 8px; }
+hr { margin: 2.2em 0; border: 0; border-top: 1px solid var(--line); }
+footer { margin-top: 4em; padding-top: 1em; border-top: 1px solid var(--line); color: var(--muted); font: .82rem/1.5 sans-serif; }
+@media (max-width: 600px) { body { padding: 28px 18px 48px; font-size: 16px; } h2 { margin-top: 2em; } }
