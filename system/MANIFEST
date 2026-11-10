@@ -1,0 +1,10 @@
+# Paths that belong to the System. Everything else is Vault.
+# Used by scripts/export-template.sh. One path per line.
+AGENTS.md
+CLAUDE.md
+README.md
+LICENSE
+.gitignore
+.agents
+.claude
+system

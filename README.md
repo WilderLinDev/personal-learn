@@ -1,85 +1,48 @@
 # Personal Learn
 
-A public, English-first personal knowledge system for learning across disciplines, improving reasoning, and building practical skills over time.
+An AI tutor that lives in a git repository. Every learning conversation builds on the last one: the tutor reads what you have already learned, teaches the next step, tests your recall, and saves the result as plain Markdown and YAML.
 
-**Repository:** https://github.com/WilderLinDev/personal-learn  
-**Primary language:** English  
-**Conversation language:** Chinese or mixed Chinese/English, as useful  
-**Source of truth:** This Git repository
+It works with any AI agent that can read and write the repository — Claude Code, Codex, or ChatGPT with the GitHub connector.
 
-## Why this exists
+## What makes it different
 
-This repository turns separate learning conversations into one cumulative body of knowledge. A new chat should not mean starting from zero: an AI tutor should read the relevant learning history, teach from the learner's current level, connect new ideas to existing knowledge, and save the outcome.
+The tutor follows a short protocol built only from methods with strong, replicated evidence ([system/learning-science.md](system/learning-science.md)):
 
-The long-term goal is to:
-- Build a broad, connected understanding of the world.
-- Improve reasoning, judgment, and the ability to evaluate claims.
-- Develop practical skills that can be applied outside the learning environment.
-- Improve English through sustained exposure to clear, useful English content.
+1. **Retrieve, don't reread** — you answer from memory.
+2. **Space it out** — reviews come back at growing intervals.
+3. **Relearn to criterion** — each question is answered correctly once per session.
+4. **Corrective feedback** — immediately, with the reason.
+5. **You generate, the AI guides** — hints, not answers.
 
-## Core principles
+Mastery is never self-reported. It is derived from how well you recall each item over weeks.
 
-1. **Repository as source of truth.** Chat history is temporary; durable learning state belongs here.
-2. **English-first knowledge.** Write canonical knowledge, lessons, references, and records in clear English. Use Chinese explanations when they materially improve understanding. Preserve important English terminology.
-3. **One connected system.** Use domains for navigation, tags for cross-cutting topics, and explicit links for relationships.
-4. **Two levels of knowledge.** Maintain topic syntheses and reusable atomic knowledge notes.
-5. **Separate truth from mastery.** A claim's verification status is not the same as the learner's mastery.
-6. **Preserve the learning journey.** Learning records are historical records; update canonical knowledge when understanding improves.
-7. **Save at meaningful boundaries.** Save when a lesson is completed or intentionally paused, not after every chat message.
-8. **Public by design.** Detailed learning records, progress, weak areas, preferences, and personal learning reflections are intentionally part of the published knowledge project.
-9. **Portable content.** Prefer Markdown, standard relative links, and standalone HTML. Do not make a proprietary note-taking app a required dependency.
-10. **No invented persistence.** An AI must verify successful GitHub writes before claiming that work was saved.
+## Layout
 
-## Automatic teaching
+| Path | Part | Purpose |
+|---|---|---|
+| `AGENTS.md`, `CLAUDE.md` | System | Entry point for AI agents |
+| `.agents/skills/tutor/` | System | The complete tutoring procedure |
+| `system/` | System | Learning science, file schema, glossary, setup, scripts |
+| `vault/` | Vault | One learner's profile, notes, sessions, and reviews |
 
-Personal Learn includes its own teaching method in `.agents/skills/personal-learn/SKILL.md`. In a correctly configured ChatGPT Project, ordinary learning requests such as "Teach me ETF", "What is inflation?", "Help me review", or "Continue learning history" should automatically use this workflow. **You do not need to type `@Teach` each time.**
+The System never contains anything about a specific learner. Everything personal lives in `vault/`.
 
-The separate Teach plugin is optional. Its teaching approach has been integrated into Personal Learn, while GitHub remains the source of truth.
+## Getting started
 
-## Repository map
+1. Create your own repository from this template.
+2. Connect your AI agent:
+   - **Claude Code / Codex**: open the repository; `AGENTS.md` is picked up automatically.
+   - **ChatGPT**: follow [system/chatgpt-project.md](system/chatgpt-project.md).
+3. Say "I want to learn …". On the first run the tutor asks a few questions and fills in `vault/profile/`.
 
-| Path | Purpose |
-|---|---|
-| `AGENTS.md` | Repository-wide instructions and automatic learning-intent routing |
-| `MISSION.md` | Long-term learning mission |
-| `NOTES.md` | Teaching and interaction preferences |
-| `RESOURCES.md` | Curated learning sources |
-| `INDEX.md` | Main navigation and knowledge index |
-| `domains/` | Domain landing pages and maps |
-| `knowledge/` | Atomic, reusable knowledge notes |
-| `topics/` | Larger topic syntheses that connect atomic notes |
-| `lessons/` | Self-contained HTML lessons |
-| `reference/` | Compact HTML reference pages |
-| `learning-records/` | Historical records of what was learned |
-| `reviews/QUEUE.md` | Spaced-review queue |
-| `assets/` | Shared lesson assets |
-| `.agents/skills/personal-learn/` | Portable Agent Skill with the teaching method and workflows |
-| `docs/` | Architecture, workflows, schemas, and setup guides |
+## Upgrading the System
 
-## Start here
+Replace the paths listed in [system/MANIFEST](system/MANIFEST) with the newer version. `vault/` is never touched.
 
-### For a person
+## Publishing a clean template
 
-1. Read [MISSION.md](MISSION.md) and [INDEX.md](INDEX.md).
-2. Browse [knowledge](knowledge/README.md), [topics](topics/README.md), and [learning records](learning-records/README.md).
-3. Use the repository with GitHub's web interface or any Markdown viewer. No Obsidian installation is required.
-
-### For an AI agent
-
-1. Read [AGENTS.md](AGENTS.md).
-2. Read [MISSION.md](MISSION.md), [NOTES.md](NOTES.md), and [INDEX.md](INDEX.md).
-3. Activate [the Personal Learn skill](.agents/skills/personal-learn/SKILL.md) for learning, saving, connecting, reviewing, or maintaining knowledge.
-4. Follow [the AI workflow](docs/AI-WORKFLOW.md), [teaching method](docs/TEACHING-METHOD.md), and [knowledge schema](docs/KNOWLEDGE-SCHEMA.md).
-5. For ChatGPT Projects, copy [the project instructions](docs/CHATGPT-PROJECT-INSTRUCTIONS.md) into the Project's instructions and enable the GitHub connection for this repository.
-
-## ChatGPT setup
-
-The one-time Project setup is documented in [ChatGPT Project Instructions](docs/CHATGPT-PROJECT-INSTRUCTIONS.md). Once configured, start learning chats inside that Project and use natural language. You do not need to manually invoke `@Teach`.
-
-## Future website
-
-The content model is designed to support a future website, but the website is intentionally deferred until the knowledge structure has real content. A later static-site layer can render Markdown notes, topic pages, search, backlinks, a knowledge graph, lessons, and review views without changing the repository's role as the source of truth.
+From an instance, `system/scripts/export-template.sh <dir>` writes the System plus an empty vault into a new repository with fresh history.
 
 ## License
 
-No open-source content license has been selected yet. Public visibility does not, by itself, grant permission to reuse or redistribute repository content.
+System files: [MIT](LICENSE). The contents of `vault/` belong to their learner; see `vault/README.md`.
