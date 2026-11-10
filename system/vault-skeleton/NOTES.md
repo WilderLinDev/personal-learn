@@ -1,10 +1,10 @@
-<!-- TEMPLATE: not yet filled in. The tutor fills this in during the first session. -->
+<!-- TEMPLATE -->
 # Notes
 
-## Teaching preferences
+## Preferences
 - …
 
 ## Persistence
 - Repository: …
-- Auto-commit sessions to the default branch: yes / no
+- Auto-commit to the default branch: yes / no
 - Vault visibility: public / private

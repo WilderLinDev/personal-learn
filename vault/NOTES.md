@@ -16,5 +16,5 @@
 
 ## Persistence
 - Repository: WilderLinDev/personal-learn
-- Auto-commit sessions to the default branch (`main`): yes, without asking each time.
+- Auto-commit to the default branch (`main`): yes, without asking each time.
 - Vault visibility: public, by explicit choice. Detailed progress, weak areas, preferences, and reflections may be included; do not redact them.

@@ -1,0 +1,17 @@
+---
+name: review
+description: Run a spaced-review session over the learner's due items across all topics in this repository's vault. Use when the user wants to review, revise, or asks what is due.
+---
+
+# Review
+
+1. `python3 system/scripts/review.py due` lists due items (id, topic, kind, question). Ask at most ~10. Put easily confused items next to each other.
+2. For each item:
+   1. Ask the question. Ask for confidence first (`guess` / `unsure` / `sure`), then the answer from memory.
+   2. `python3 system/scripts/review.py answer <item-id>`, compare, and give corrective feedback with the reason. Give extra attention to wrong `sure` answers.
+   3. `python3 system/scripts/review.py grade <item-id> <again|hard|good|easy> <confidence>`.
+   4. Ask `again` items once more at the end of the session.
+3. If an item turns out ambiguous or wrong, fix its question or answer in `reviews.json` with the learner's agreement.
+4. Commit with `review: <date>` per `vault/NOTES.md`, and report: items reviewed, misses, wrong `sure` answers, next due date.
+
+Without a shell, read and update `vault/topics/*/reviews.json` by hand using [system/reviews.md](../../../system/reviews.md). Never show an answer before the learner has answered.

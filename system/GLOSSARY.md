@@ -1,39 +1,42 @@
 # Personal Learn
 
-The repository's own terms. A learner's topic glossary lives in `vault/GLOSSARY.md` and follows Teach's glossary format.
-
-## Repository boundary
+## Repository
 
 **System**:
-The reusable part of the repository: the tutor skill, the Teach method, learning science, schemas, and an empty vault skeleton. Contains nothing specific to one learner.
+The reusable part of the repository: skills, the Teach method, learning science, scripts, and an empty vault skeleton. Contains nothing about a specific learner.
 _Avoid_: Engine, framework
 
 **Vault**:
-One learner's Teach workspace: mission, notes, resources, glossary, lessons, reference documents, learning records, and review items. Replaceable as a unit; the System never hard-codes its contents.
-_Avoid_: Data folder, personal folder, workspace (when meaning the directory in this repository)
+One learner's data: the north star, global notes, and topics.
+_Avoid_: Data folder, personal folder
 
 **Template**:
-The public repository that contains the System and an empty Vault skeleton, with no learner history.
-_Avoid_: Starter, boilerplate
+The public repository containing the System and an empty Vault, with no learner history.
 
 **Instance**:
-One learner's own repository, created from the Template, holding the System plus a populated Vault.
-_Avoid_: Fork, personal repo
+One learner's repository: the System plus a populated Vault.
+_Avoid_: Fork
 
-**Teach**:
-The base teaching method, kept verbatim in `system/teach/`. The tutor skill adds to it but changes it only where necessary.
-_Avoid_: Teach plugin (when meaning the method)
+## Learning
 
-## Learner state
+**North star**:
+The learner's long-term goals across all topics.
+_Avoid_: Global mission
+
+**Topic**:
+One Teach workspace with its own concrete mission.
+_Avoid_: Course, subject, domain
 
 **Review item**:
-A single retrieval question with an expected answer and a log of every attempt, used to schedule spaced review of one topic.
-_Avoid_: Flashcard, quiz question
+One retrieval question with its answer, schedule, and log of attempts.
+_Avoid_: Flashcard, card
 
 **Mastery**:
-How reliably the learner can recall and apply a topic, derived from the state of its Review items, never from self-report or coverage. Levels: new, learning, retained, mastered.
-_Avoid_: Familiarity, understanding level, understood
+How reliably the learner recalls and applies a topic, derived from its Review items, never from self-report. Levels: new, learning, retained, mastered.
+_Avoid_: Understood, progress
+
+**Mastery gate**:
+The rule that a topic gets no new lesson while it has items never answered correctly or overdue.
 
 **Confidence**:
-The learner's own rating of how sure they are, given before seeing the answer to a Review item. Recorded to measure calibration, not used as evidence of Mastery.
-_Avoid_: Self-assessment
+The learner's rating (guess, unsure, sure) given before answering a Review item. Used to measure calibration, not Mastery.

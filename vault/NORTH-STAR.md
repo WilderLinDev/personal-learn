@@ -1,0 +1,12 @@
+# North Star
+
+## Goals
+Build a broad, connected understanding of the world while improving reasoning, judgment, and practical skills, to make better decisions in unfamiliar situations.
+
+- Explain how systems, people, institutions, and the natural world work, with mental models rather than disconnected facts — across economics, finance, history, science, technology, psychology, philosophy, politics, and more.
+- Explain causes and mechanisms; evaluate evidence, sources, incentives, and uncertainty; compare explanations; recognise assumptions and second-order effects.
+- Transfer ideas between disciplines.
+- Apply knowledge through projects, exercises, decisions, and feedback.
+- Read and write clear, natural English about these subjects, with growing complexity.
+
+## Topics
