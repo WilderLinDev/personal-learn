@@ -1,6 +1,6 @@
 # Learning Science
 
-Why the tutor works the way it does. Only methods with strong, replicated evidence are part of the default protocol. Everything else is either situational or excluded.
+Why the tutor works the way it does. The base method is [Teach](teach/SKILL.md), which already calls for retrieval practice, spacing, interleaving, and tight feedback loops; this document gives the evidence for those principles and for the tutor's additions. Only methods with strong, replicated evidence are part of the default protocol. Everything else is either situational or excluded.
 
 Sources were accessed on 2026-11-11. Effect sizes marked † were taken from abstracts or secondary summaries, not checked against the full text.
 

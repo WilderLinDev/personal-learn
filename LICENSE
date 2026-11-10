@@ -2,7 +2,8 @@ MIT License
 
 Copyright (c) 2026 Personal Learn contributors
 
-This license applies to the System files listed in system/MANIFEST.
+This license applies to the System files listed in system/MANIFEST, except
+system/teach/, which is third-party material under its original authors' terms.
 It does not apply to the contents of vault/, which belong to the learner.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

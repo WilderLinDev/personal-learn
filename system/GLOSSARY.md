@@ -1,16 +1,16 @@
 # Personal Learn
 
-A reusable, AI-operated system for long-term, cross-disciplinary learning, plus one learner's data that the system operates on.
+The repository's own terms. A learner's topic glossary lives in `vault/GLOSSARY.md` and follows Teach's glossary format.
 
 ## Repository boundary
 
 **System**:
-The reusable part of the repository: teaching method, agent skill, schemas, and empty scaffolding. Contains nothing specific to one learner.
-_Avoid_: Engine, framework, template (when meaning the directory)
+The reusable part of the repository: the tutor skill, the Teach method, learning science, schemas, and an empty vault skeleton. Contains nothing specific to one learner.
+_Avoid_: Engine, framework
 
 **Vault**:
-Everything that belongs to one learner: mission, preferences, notes, sessions, and learner model. Replaceable as a unit; the System never hard-codes its contents.
-_Avoid_: Data folder, personal folder, learning directory
+One learner's Teach workspace: mission, notes, resources, glossary, lessons, reference documents, learning records, and review items. Replaceable as a unit; the System never hard-codes its contents.
+_Avoid_: Data folder, personal folder, workspace (when meaning the directory in this repository)
 
 **Template**:
 The public repository that contains the System and an empty Vault skeleton, with no learner history.
@@ -20,32 +20,18 @@ _Avoid_: Starter, boilerplate
 One learner's own repository, created from the Template, holding the System plus a populated Vault.
 _Avoid_: Fork, personal repo
 
-## Learning content
-
-**Note**:
-A durable, learner-independent explanation of knowledge, with sources and verification status. Either a concept (one atomic idea) or a synthesis (connects several concepts into a larger picture).
-_Avoid_: Knowledge note, topic, atomic note, card
-
-**Session**:
-The record of one substantive learning sitting: what was taught, and how the learner actually performed. Historical and append-only.
-_Avoid_: Lesson, learning record, chat
-
-**Review item**:
-A single retrieval question with an expected answer, used to test recall of part of a Note.
-_Avoid_: Flashcard, quiz, review entry
+**Teach**:
+The base teaching method, kept verbatim in `system/teach/`. The tutor skill adds to it but changes it only where necessary.
+_Avoid_: Teach plugin (when meaning the method)
 
 ## Learner state
 
-**Learner model**:
-The learner-specific state of what they can recall and apply, kept separately from Notes.
-_Avoid_: Mastery metadata, progress
-
-**Verification status**:
-How well a Note's claims are supported by sources. Describes the knowledge, never the learner.
-_Avoid_: Confidence, accuracy
+**Review item**:
+A single retrieval question with an expected answer and a log of every attempt, used to schedule spaced review of one topic.
+_Avoid_: Flashcard, quiz question
 
 **Mastery**:
-How reliably the learner can recall and apply a Note, derived from the state of its Review items, never from self-report. Levels: new, learning, retained, mastered.
+How reliably the learner can recall and apply a topic, derived from the state of its Review items, never from self-report or coverage. Levels: new, learning, retained, mastered.
 _Avoid_: Familiarity, understanding level, understood
 
 **Confidence**:

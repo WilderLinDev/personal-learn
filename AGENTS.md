@@ -3,7 +3,9 @@
 This repository is an AI-operated learning system. It has two parts (see [system/GLOSSARY.md](system/GLOSSARY.md)):
 
 - **System**: the reusable method. Listed in [system/MANIFEST](system/MANIFEST). Contains nothing about any specific learner.
-- **Vault** (`vault/`): one learner's profile, notes, sessions, and reviews.
+- **Vault** (`vault/`): one learner's Teach workspace — mission, notes, resources, glossary, lessons, reference documents, learning records, and review items.
+
+The base teaching method is Teach, kept verbatim in `system/teach/`. Do not edit those files; adapt it only in the tutor skill.
 
 ## Routing
 
