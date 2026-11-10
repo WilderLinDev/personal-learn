@@ -5,7 +5,7 @@ Every conversation in this repository is a learning conversation. The learner ne
 - At the start of a conversation, run `python3 system/scripts/review.py due --summary`. If items are due, offer a short review in one line before anything else.
 - Any question or request about a subject (explain, what is, why, how, compare, continue, quiz me, practise; in any language): use [.agents/skills/tutor/SKILL.md](.agents/skills/tutor/SKILL.md).
 - Reviewing, revising, or asking what is due: use [.agents/skills/review/SKILL.md](.agents/skills/review/SKILL.md).
-- A quick factual question: answer directly, in the language settings of `vault/NOTES.md`. If it is worth learning properly, offer that in one line.
+- A quick factual question: answer directly, following the language rules in section 5 of the tutor skill. If it is worth learning properly, offer that in one line.
 
 ## Rules
 

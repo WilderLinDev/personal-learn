@@ -39,7 +39,7 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
 
 ## 4. Review items
 
-Write each item so it is focused (one detail), precise (one unambiguous answer), consistent (the same answer every time), tractable (answerable with effort), and effortful (requires recall, not recognition). Each topic needs at least one `why` or `apply` item. Add `term` items (section 5) for at most 3 target-language terms per lesson that the learner needed a gloss for. Show drafts to the learner; they may edit or reject any.
+Write each item so it is focused (one detail), precise (one unambiguous answer), consistent (the same answer every time), tractable (answerable with effort), and effortful (requires recall, not recognition). Each topic needs at least one `why` or `apply` item. Add `term` items (section 5) for at most 3 key technical terms per lesson. Show drafts to the learner; they may edit or reject any.
 
 ```bash
 python3 system/scripts/review.py add <slug> <recall|why|apply|term> "<question>" "<answer>" --source lessons/NNNN-<slug>.html
@@ -50,16 +50,23 @@ Format, scheduling, and Mastery: [system/reviews.md](../../../system/reviews.md)
 
 ## 5. Language
 
-Settings are in the `Language` section of `vault/NOTES.md`: `Native`, `Target`, `Target level` (CEFR), `Conversation` (`target` | `mixed` | `native`). The target language is the default; the native language supports it.
+Settings are in the `Language` section of `vault/NOTES.md`: `Native`, `Target`, `Target level` (CEFR), `Conversation` (`target` | `mixed` | `native`).
 
-- **Durable files** (lessons, reference documents, glossaries, learning records, review items) are in the target language, written so that almost every word is within the learner's level.
-- **New or hard terms** get a native-language gloss on first use, e.g. `inflation（通货膨胀）`, and none after that. Each topic's `GLOSSARY.md` keeps the native equivalent next to each term.
-- **Concept before language.** When the concept, not the language, is what blocks understanding, explain it briefly in the native language, then return to the target language.
-- **Conversation**: `target` uses only the target language unless the learner is stuck; `mixed` uses the target language with native-language clarification where it helps; `native` uses the native language, with key terms in the target language.
+Applies to every reply and every durable file (lessons, reference documents, glossaries, learning records, review items):
+
+- **Write in the target language**, at the learner's level, so that almost every word is familiar.
+- **Gloss in the native language**, inline, on first use in each reply or file:
+  - every **technical term**, e.g. `inflation（通货膨胀）`, `opportunity cost（机会成本）`, so the learner learns the term in both languages;
+  - any **ordinary word likely above the learner's level**, e.g. `scarce（稀缺的）`.
+- Each topic's `GLOSSARY.md` lists every technical term with its native equivalent.
+- `Conversation` sets how much native language replies may contain:
+  - `target`: only glosses. If the learner is still stuck after a simpler target-language explanation, or asks, add one or two native-language sentences, then continue in the target language.
+  - `mixed`: target language, with native-language sentences where they clarify.
+  - `native`: native language, with technical terms also given in the target language.
 - **Answers** may be in either language and are graded on content only. Note one target-language improvement in a separate line, if useful.
-- **Level.** When the learner reads without glosses easily, or needs them often, adjust `Target level` in `vault/NOTES.md` and say so in one line.
+- **Level.** When the learner reads easily without glosses, or often asks about words, adjust `Target level` in `vault/NOTES.md` and say so in one line.
 
-`term` items ask for the meaning of a target-language term (answer in either language), or for the term given its meaning.
+`term` items cover technical terms in both directions: target-language term → meaning and native-language term, or native-language term → target-language term.
 
 ## 6. Data safety
 

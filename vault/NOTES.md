@@ -4,7 +4,7 @@
 - Native: zh-CN
 - Target: en
 - Target level: B1
-- Conversation: mixed
+- Conversation: target
 
 ## Teaching preferences
 - Prefer layered explanations over sentence-by-sentence translation.
