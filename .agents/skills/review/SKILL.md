@@ -14,6 +14,6 @@ description: Spaced review of due items across all topics in this repository's v
 3. If an item turns out ambiguous or wrong, fix its question or answer in `reviews.json` with the learner's agreement.
 4. Save after every reply that graded an answer, as the `Saving` section of [AGENTS.md](../../../AGENTS.md) requires. At the end, report: items reviewed, misses, wrong `sure` answers, next due date.
 
-Language follows section 5 of the [tutor skill](../tutor/SKILL.md): answers in either language, graded on content only.
+Language follows the `Language` section of [AGENTS.md](../../../AGENTS.md).
 
 Without a shell, read and update `vault/topics/*/reviews.json` by hand using [system/reviews.md](../../../system/reviews.md). Never show an answer before the learner has answered.
