@@ -17,7 +17,7 @@ Above the topics:
 - `vault/NORTH-STAR.md`: the learner's long-term goals and the list of topics, one line each with its mission.
 - `vault/NOTES.md`: global preferences and persistence settings. A topic's `NOTES.md` overrides it.
 
-Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; work is saved after every reply (section 7).
+Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; all topics share one design instead of a stylesheet per workspace (section 3); work is saved after every reply (section 7).
 
 ## 2. Choosing the topic
 
@@ -29,7 +29,7 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
 
 1. **Start.** Read the topic's files as Teach requires. Run `python3 system/scripts/review.py due` and review due items for this topic first, following the review skill.
 2. **Mastery gate.** Do not start a new lesson while this topic has items that were never answered correctly or are overdue. Close those gaps first.
-3. **Lesson.** As Teach describes. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
+3. **Lesson.** As Teach describes, built with [system/design/](../../../system/design/README.md): start each lesson and reference document from its templates and use only its components. The design replaces Teach's per-workspace shared stylesheet; a topic's `assets/` holds only components that topic alone needs. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
 4. **Practice.** Teach's feedback loop, plus:
    - Ask for confidence first (`guess` / `unsure` / `sure`), then the answer from memory, then corrective feedback with the reason. Give extra attention to wrong `sure` answers.
    - Never solve the learner's own exercise. Give hints and leading questions until they produce the answer.

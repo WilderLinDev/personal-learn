@@ -21,6 +21,13 @@ _Avoid_: Fork
 The published lessons and reference documents of an Instance, with an index.
 _Avoid_: Website, blog
 
+**Design**:
+The one look shared by every lesson and reference document in all topics: one stylesheet, page templates, and a fixed set of components.
+_Avoid_: Style, skin
+
+**Theme**:
+The learner's own settings on top of the Design, such as the accent colour.
+
 ## Learning
 
 **North star**:

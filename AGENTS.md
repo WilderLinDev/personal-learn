@@ -15,7 +15,7 @@ The learner may leave at any moment, so save at the end of every reply that chan
 - Local git: commit, then push if a remote exists.
 - GitHub connector: a change exists only once it is written to GitHub. Read each file's current contents and SHA right before writing; if the branch moved, merge with what is there.
 - Follow `Auto-commit` in `vault/NOTES.md`; if it is `no`, ask before saving.
-- End such a reply with one line: `Saved: <commit>`, after verifying the write, or `Not saved: <reason>`. Retry unsaved changes in the next reply. If `Site` is set in `vault/NOTES.md`, follow it with a link to each lesson or reference document the reply created or changed: `<Site>/<topic>/<lessons|reference>/<file>`.
+- End such a reply with one line: `Saved: <commit>`, after verifying the write, or `Not saved: <reason>`. Retry unsaved changes in the next reply. If `Site` is set in `vault/NOTES.md`, follow it with a link to each lesson or reference document the reply created or changed: `<Site>/vault/topics/<topic>/<lessons|reference>/<file>`.
 
 ## Rules
 

@@ -4,17 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calls and Puts: Options in Plain English</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../../../../system/design/learn.css">
+  <link rel="stylesheet" href="../../../theme.css">
 </head>
-<body>
-<main class="page">
-  <div class="eyebrow">Finance · Lesson 02</div>
+<body class="lesson">
+<header class="masthead">
+  <p class="kicker">Finance · Lesson 02</p>
   <h1>Calls and Puts: Options in Plain English</h1>
   <p class="lead">A stock is ownership. An option is a contract that gives someone a right, or creates an obligation, to trade an asset at a set price.</p>
   <p class="meta">11 November 2026 · The basic meaning of “my calls” and “my puts”</p>
-
-  <div class="callout">
-    <strong>The core model:</strong> A call gives its buyer the right to buy. A put gives its buyer the right to sell. Both have a strike price and an expiration date. The buyer pays a premium for this right.
+</header>
+<main>
+  <div class="key">
+    <p class="label">The core model</p>
+    <p>A call gives its buyer the right to buy. A put gives its buyer the right to sell. Both have a strike price and an expiration date. The buyer pays a premium for this right.</p>
   </div>
 
   <h2>1. What is an option?</h2>
@@ -22,40 +25,44 @@
   <p>The underlying asset can be a stock, an ETF or a stock index. So options are related to stocks, but an option is not a share of stock. If you buy a call option, you do not become a shareholder just because you own the option.</p>
 
   <h2>2. Call vs. put</h2>
-  <table>
-    <thead><tr><th>Option</th><th>Buyer has the right to…</th><th>Common market view</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Call option（看涨期权）</strong></td><td>Buy the underlying asset at the strike price.</td><td>Usually bullish: the buyer expects the price to rise.</td></tr>
-      <tr><td><strong>Put option（看跌期权）</strong></td><td>Sell the underlying asset at the strike price.</td><td>Usually bearish or protective: the buyer expects a fall or wants insurance.</td></tr>
-    </tbody>
-  </table>
+  <div class="table">
+    <table>
+      <thead><tr><th>Option</th><th>Buyer has the right to…</th><th>Common market view</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Call option（看涨期权）</strong></td><td>Buy the underlying asset at the strike price.</td><td>Usually bullish: the buyer expects the price to rise.</td></tr>
+        <tr><td><strong>Put option（看跌期权）</strong></td><td>Sell the underlying asset at the strike price.</td><td>Usually bearish or protective: the buyer expects a fall or wants insurance.</td></tr>
+      </tbody>
+    </table>
+  </div>
   <p>The buyer has a right. The seller, also called the writer（期权卖方）, has an obligation if the buyer exercises the option. Selling an option is therefore a different risk position from buying one.</p>
 
   <h2>3. Four important parts of an option</h2>
-  <ul>
-    <li><strong>Underlying asset:</strong> the stock, ETF or index the option is based on.</li>
-    <li><strong>Strike price（行权价）:</strong> the fixed price at which the buyer can buy or sell.</li>
-    <li><strong>Expiration date（到期日）:</strong> the last date when the option can be used under its contract rules.</li>
-    <li><strong>Premium（权利金）:</strong> the price the buyer pays for the option.</li>
-  </ul>
+  <dl class="terms">
+    <dt>Underlying asset</dt><dd>The stock, ETF or index the option is based on.</dd>
+    <dt>Strike price（行权价）</dt><dd>The fixed price at which the buyer can buy or sell.</dd>
+    <dt>Expiration date（到期日）</dt><dd>The last date when the option can be used under its contract rules.</dd>
+    <dt>Premium（权利金）</dt><dd>The price the buyer pays for the option.</dd>
+  </dl>
   <p>A standard US stock option contract generally represents 100 shares. For example, if the quoted premium is $2 per share, one standard contract usually costs $200 ($2 × 100). Check the contract details: adjusted contracts and options on indexes may have different specifications.</p>
 
   <h2>4. A simple call example</h2>
   <p>Imagine a stock is trading at <strong>$100</strong>. You buy one call option with:</p>
-  <ul>
-    <li>Strike price: $105</li>
-    <li>Premium: $2 per share</li>
-    <li>Contract size: 100 shares</li>
-    <li>Total premium paid: $200</li>
-  </ul>
-  <table>
-    <thead><tr><th>Stock price at expiration</th><th>What happens</th><th>Your result before fees</th></tr></thead>
-    <tbody>
-      <tr><td>$120</td><td>You can buy at $105 when the market price is $120. The option has $15 per share of value.</td><td>$1,500 value − $200 premium = <strong>$1,300 profit</strong>.</td></tr>
-      <tr><td>$106</td><td>The option is worth $1 per share, but you paid $2.</td><td><strong>$100 loss</strong>.</td></tr>
-      <tr><td>$105 or less</td><td>The call has no exercise value at expiration.</td><td><strong>$200 loss</strong>.</td></tr>
-    </tbody>
-  </table>
+  <div class="stats">
+    <div class="stat"><strong>$105</strong><span>Strike price</span></div>
+    <div class="stat"><strong>$2</strong><span>Premium per share</span></div>
+    <div class="stat"><strong>100</strong><span>Contract size, in shares</span></div>
+    <div class="stat"><strong>$200</strong><span>Total premium paid</span></div>
+  </div>
+  <div class="table">
+    <table>
+      <thead><tr><th>Stock price at expiration</th><th>What happens</th><th>Your result before fees</th></tr></thead>
+      <tbody>
+        <tr><td>$120</td><td>You can buy at $105 when the market price is $120. The option has $15 per share of value.</td><td>$1,500 value − $200 premium = <strong>$1,300 profit</strong>.</td></tr>
+        <tr><td>$106</td><td>The option is worth $1 per share, but you paid $2.</td><td><strong>$100 loss</strong>.</td></tr>
+        <tr><td>$105 or less</td><td>The call has no exercise value at expiration.</td><td><strong>$200 loss</strong>.</td></tr>
+      </tbody>
+    </table>
+  </div>
   <p>The break-even price at expiration is $107: the $105 strike plus the $2 premium. The stock can rise and you can still lose money if it does not rise enough by the expiration date.</p>
 
   <h2>5. A simple put example</h2>
@@ -82,21 +89,30 @@
     <li><strong>Seller:</strong> some short-option positions can lose much more than the premium received. Certain uncovered calls have theoretically unlimited loss.</li>
     <li><strong>Time:</strong> as expiration gets closer, the time value of an option often falls, all else being equal.</li>
   </ul>
-  <div class="callout">
-    <strong>Safety rule:</strong> Buying a stock and buying a call option are not the same. A stock has no expiration date. An option does. Before trading an option, understand its strike, expiration, premium, contract size and maximum possible loss.
+  <div class="key">
+    <p class="label">Safety rule</p>
+    <p>Buying a stock and buying a call option are not the same. A stock has no expiration date. An option does. Before trading an option, understand its strike, expiration, premium, contract size and maximum possible loss.</p>
   </div>
 
-  <h2>Check your understanding</h2>
-  <p>A trader buys one standard XYZ $100 put for a premium of $3 per share. At expiration, XYZ is $90.</p>
-  <p><strong>Before fees, what is the contract's exercise value, and what is the buyer's net profit or loss?</strong></p>
-  <p>Try the calculation yourself. You can ask follow-up questions if any part is unclear.</p>
-
-  <p>Back to <a href="0001-us-market-map.html">Lesson 01 — A Map of the US Stock Market</a> or open the <a href="../reference/us-market-map.html">Quick Reference</a>.</p>
-
-  <footer>
-    <strong>Primary reading:</strong>
-    <a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-63">SEC: An Introduction to Options</a> (updated 16 July 2026). For more detail, read the Options Clearing Corporation's <a href="https://www.theocc.com/company-information/documents-and-archives/options-disclosure-document">Options Disclosure Document</a>.
-  </footer>
+  <section class="check">
+    <h2>Check your understanding</h2>
+    <p>A trader buys one standard XYZ $100 put for a premium of $3 per share. At expiration, XYZ is $90.</p>
+    <p class="q">Before fees, what is the contract's exercise value, and what is the buyer's net profit or loss?</p>
+    <p>Try the calculation yourself.</p>
+  </section>
 </main>
+<footer class="colophon">
+  <section class="source">
+    <h2>Primary source</h2>
+    <p><a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-63">SEC: An Introduction to Options</a> (updated 16 July 2026)</p>
+    <p>For more detail, read the Options Clearing Corporation's <a href="https://www.theocc.com/company-information/documents-and-archives/options-disclosure-document">Options Disclosure Document</a>.</p>
+  </section>
+  <nav class="pager">
+    <a href="0001-us-market-map.html">← Lesson 01: A Map of the US Stock Market</a>
+    <a href="../reference/us-market-map.html">Reference</a>
+    <a href="../../../../">All topics</a>
+  </nav>
+  <p class="ask">Anything unclear? Ask your tutor a follow-up question.</p>
+</footer>
 </body>
 </html>

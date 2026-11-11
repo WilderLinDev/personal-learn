@@ -4,17 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A Map of the US Stock Market</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../../../../system/design/learn.css">
+  <link rel="stylesheet" href="../../../theme.css">
 </head>
-<body>
-<main class="page">
-  <div class="eyebrow">Finance · Lesson 01</div>
+<body class="lesson">
+<header class="masthead">
+  <p class="kicker">Finance · Lesson 01</p>
   <h1>A Map of the US Stock Market</h1>
   <p class="lead">The key is to separate where trading happens, what you own, how a market is measured, and where your retirement money is held.</p>
   <p class="meta">11 November 2026 · A beginner's map of stocks, funds, ETFs, indexes and retirement plans</p>
-
-  <div class="callout">
-    <strong>The core model: five different layers</strong>
+</header>
+<main>
+  <div class="key">
+    <p class="label">The core model: five different layers</p>
     <ol>
       <li><strong>Market:</strong> where buyers and sellers trade.</li>
       <li><strong>Asset:</strong> what you own, such as a stock or bond.</li>
@@ -22,24 +24,24 @@
       <li><strong>Index:</strong> a measurement of a group of assets.</li>
       <li><strong>Account:</strong> where your money and investments are held, such as a 401(k).</li>
     </ol>
-    An option is a contract based on an asset. It is not the same thing as owning the asset.
+    <p>An option is a contract based on an asset. It is not the same thing as owning the asset.</p>
   </div>
 
   <h2>1. Primary market vs. secondary market</h2>
   <p>In the <strong>primary market（一级市场）</strong>, an issuer sells newly created securities to investors and receives the money. An initial public offering (IPO，首次公开募股) is one example. Companies can also issue new shares later.</p>
   <p>In the <strong>secondary market（二级市场）</strong>, investors trade securities that already exist. If you buy a listed Apple share from another investor, your money normally goes to that seller, not to Apple.</p>
-  <div class="grid">
-    <section class="panel">
+  <div class="cards">
+    <section class="card">
       <h3>Primary market</h3>
       <p><strong>Company → Investor</strong></p>
       <p>The company issues new shares and receives the proceeds.</p>
     </section>
-    <section class="panel">
+    <section class="card">
       <h3>Secondary market</h3>
       <p><strong>Investor ↔ Investor</strong></p>
       <p>Investors trade existing shares. The seller receives the money.</p>
     </section>
-    <section class="panel">
+    <section class="card">
       <h3>Why it matters</h3>
       <p>Investors can buy and sell more easily. This creates liquidity（流动性）and helps the market discover prices.</p>
     </section>
@@ -50,36 +52,41 @@
   <p>A <strong>stock（股票）</strong> represents part ownership of one company. If you own a share of a company, you own a small part of that business. A share may give you voting rights and a right to dividends if the company declares them.</p>
   <p>A <strong>fund（基金）</strong> pools money from many investors and uses it to buy a portfolio（投资组合）of assets. A stock fund may own shares in dozens or hundreds of companies. A bond fund owns bonds. A fund is a basket, not one company.</p>
   <p>An <strong>ETF（交易所交易基金）</strong> is a type of fund. It pools investors' money and owns a portfolio of assets. You buy and sell ETF shares on a stock exchange during the trading day, much like you trade a company stock.</p>
-  <table>
-    <thead><tr><th>Thing</th><th>What you own</th><th>Simple example</th></tr></thead>
-    <tbody>
-      <tr><td>One stock</td><td>A small ownership interest in one company</td><td>One share of Apple</td></tr>
-      <tr><td>Mutual fund</td><td>A share of a pooled investment portfolio; orders are normally priced once each trading day</td><td>A mutual fund holding many US stocks</td></tr>
-      <tr><td>ETF</td><td>A share of a pooled portfolio; trades on an exchange during the day</td><td>An ETF holding many US stocks</td></tr>
-    </tbody>
-  </table>
+  <div class="table">
+    <table>
+      <thead><tr><th>Thing</th><th>What you own</th><th>Simple example</th></tr></thead>
+      <tbody>
+        <tr><td>One stock</td><td>A small ownership interest in one company</td><td>One share of Apple</td></tr>
+        <tr><td>Mutual fund</td><td>A share of a pooled investment portfolio; orders are normally priced once each trading day</td><td>A mutual fund holding many US stocks</td></tr>
+        <tr><td>ETF</td><td>A share of a pooled portfolio; trades on an exchange during the day</td><td>An ETF holding many US stocks</td></tr>
+      </tbody>
+    </table>
+  </div>
   <p><strong>Important:</strong> Not every ETF tracks an index. Some ETFs are actively managed. An ETF describes how the fund is traded and structured, not necessarily how its investments are selected.</p>
 
   <h3>What is an index fund?</h3>
   <p>An <strong>index fund（指数基金）</strong> is a fund that tries to follow a market index. It can be an ETF or a mutual fund. For example, an S&amp;P 500 index fund tries to follow the S&amp;P 500.</p>
   <p>An <strong>index（指数）</strong> is only a measurement. You cannot buy the index itself. You buy a fund that tries to track it.</p>
-  <div class="callout">
-    <strong>Remember:</strong> An ETF is a type of fund. An index fund is a fund strategy. An index is a measurement. One ETF can be an index fund, but not every ETF is an index fund.
+  <div class="key">
+    <p class="label">Remember</p>
+    <p>An ETF is a type of fund. An index fund is a fund strategy. An index is a measurement. One ETF can be an index fund, but not every ETF is an index fund.</p>
   </div>
 
   <h2>3. Nasdaq, S&amp;P 500 and the Dow</h2>
   <p>This part is confusing because people use the word “Nasdaq” in two different ways.</p>
   <p><strong>Nasdaq Stock Market</strong> is a stock exchange（证券交易所）: a trading venue where buyers and sellers trade listed securities. The New York Stock Exchange (NYSE) is another major US exchange.</p>
   <p><strong>Nasdaq indexes</strong> are measurements. The most common ones are:</p>
-  <table>
-    <thead><tr><th>Name</th><th>What it measures</th><th>How to think about it</th></tr></thead>
-    <tbody>
-      <tr><td>Nasdaq Composite</td><td>Thousands of stocks listed on the Nasdaq Stock Market</td><td>A broad view of Nasdaq-listed companies; it has a strong technology presence.</td></tr>
-      <tr><td>Nasdaq-100</td><td>About 100 of the largest non-financial companies listed on Nasdaq</td><td>More concentrated in large growth and technology-related companies.</td></tr>
-      <tr><td>S&amp;P 500</td><td>500 leading large US companies</td><td>A broad measure of large US companies; it covers about 80% of available US market capitalisation.</td></tr>
-      <tr><td>Dow Jones Industrial Average (the Dow)</td><td>30 large, established US companies</td><td>A famous but much smaller index. It is price-weighted.</td></tr>
-    </tbody>
-  </table>
+  <div class="table">
+    <table>
+      <thead><tr><th>Name</th><th>What it measures</th><th>How to think about it</th></tr></thead>
+      <tbody>
+        <tr><td>Nasdaq Composite</td><td>Thousands of stocks listed on the Nasdaq Stock Market</td><td>A broad view of Nasdaq-listed companies; it has a strong technology presence.</td></tr>
+        <tr><td>Nasdaq-100</td><td>About 100 of the largest non-financial companies listed on Nasdaq</td><td>More concentrated in large growth and technology-related companies.</td></tr>
+        <tr><td>S&amp;P 500</td><td>500 leading large US companies</td><td>A broad measure of large US companies; it covers about 80% of available US market capitalisation.</td></tr>
+        <tr><td>Dow Jones Industrial Average (the Dow)</td><td>30 large, established US companies</td><td>A famous but much smaller index. It is price-weighted.</td></tr>
+      </tbody>
+    </table>
+  </div>
   <p><strong>Price-weighted（价格加权）</strong> means that a company's share price affects the Dow's weight. It does not simply give each company the same weight, and it does not weight companies by their total market value.</p>
   <p>You may be mixing up two names: the <strong>Dow Jones Industrial Average</strong> and the <strong>S&amp;P 500</strong>. They are different indexes. The Dow has 30 companies; the S&amp;P 500 has 500.</p>
   <p class="note">When a news headline says “the Nasdaq fell”, it often means the Nasdaq Composite index, not that the exchange itself fell.</p>
@@ -93,35 +100,53 @@
   <p>A traditional pension is usually a defined-benefit plan（待遇确定型养老金）. It promises a retirement benefit based on a formula, often using salary and years of service. The plan invests its assets, but the worker's promised benefit is calculated by the plan's rules rather than being simply the value of a personal stock portfolio.</p>
   <h3>Social Security: a separate public programme</h3>
   <p><strong>Social Security（美国社会保障）</strong> is a public social-insurance programme. It is funded mainly by payroll taxes. It is not a personal account where your own payroll taxes are invested in Apple or an S&amp;P 500 ETF.</p>
-  <div class="callout">
-    <strong>How the pieces connect:</strong> A worker contributes money to a 401(k) → the account offers investment choices → the worker chooses an S&amp;P 500 index fund → that fund owns shares in companies → those shares trade in the stock market. If the shares rise or fall, the fund and the retirement account can also rise or fall.
+  <div class="key">
+    <p class="label">How the pieces connect</p>
+    <ol class="steps">
+      <li>A worker contributes money to a 401(k).</li>
+      <li>The account offers investment choices.</li>
+      <li>The worker chooses an S&amp;P 500 index fund.</li>
+      <li>That fund owns shares in companies.</li>
+      <li>Those shares trade in the stock market.</li>
+    </ol>
+    <p>If the shares rise or fall, the fund and the retirement account can also rise or fall.</p>
   </div>
   <p>Many retirement plans invest in stocks and bonds, so market performance affects retirement savings. But not every retirement benefit is directly linked to an individual's stock-market balance: a traditional pension and Social Security work differently.</p>
 
   <h2>5. One complete example</h2>
   <p>Imagine an employee puts $200 from each paycheck into a 401(k) and chooses an S&amp;P 500 index mutual fund.</p>
-  <ul>
-    <li><strong>401(k):</strong> the retirement plan/account.</li>
-    <li><strong>Mutual fund:</strong> the investment vehicle.</li>
-    <li><strong>S&amp;P 500:</strong> the index the fund tries to follow.</li>
-    <li><strong>Company shares:</strong> the underlying assets held by the fund.</li>
-    <li><strong>Stock exchanges:</strong> places where those shares can be traded.</li>
-  </ul>
+  <dl class="terms">
+    <dt>401(k)</dt><dd>The retirement plan/account.</dd>
+    <dt>Mutual fund</dt><dd>The investment vehicle.</dd>
+    <dt>S&amp;P 500</dt><dd>The index the fund tries to follow.</dd>
+    <dt>Company shares</dt><dd>The underlying assets held by the fund.</dd>
+    <dt>Stock exchanges</dt><dd>Places where those shares can be traded.</dd>
+  </dl>
   <p>The employee does not directly buy “the S&amp;P 500”. The employee buys fund shares in a retirement account.</p>
 
-  <h2>Check your understanding</h2>
-  <p>Someone says: “I hold an S&amp;P 500 ETF in my 401(k).”</p>
-  <p><strong>Can you identify the account, the investment, the index and the underlying assets?</strong> Try to answer without looking back.</p>
+  <p>For a compact summary, see <a href="../reference/us-market-map.html">US Market Basics — Quick Reference</a>.</p>
 
-  <p>Next: <a href="0002-calls-and-puts.html">Lesson 02 — Calls and Puts: Options in Plain English</a>. For a compact summary, see <a href="../reference/us-market-map.html">US Market Basics — Quick Reference</a>.</p>
-
-  <footer>
-    <strong>Primary reading:</strong>
-    <a href="https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-2">SEC: ETFs</a> ·
+  <section class="check">
+    <h2>Check your understanding</h2>
+    <p>Someone says: “I hold an S&amp;P 500 ETF in my 401(k).”</p>
+    <p class="q">Can you identify the account, the investment, the index and the underlying assets?</p>
+    <p>Try to answer without looking back.</p>
+  </section>
+</main>
+<footer class="colophon">
+  <section class="source">
+    <h2>Primary source</h2>
+    <p><a href="https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-2">SEC: ETFs</a> ·
     <a href="https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-4">SEC: Index Funds</a> ·
     <a href="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-plans-definitions">IRS: Retirement Plan Definitions</a> ·
-    <a href="https://www.ssa.gov/policy/docs/chartbooks/fast_facts/2026/fast_facts26.html">SSA: Social Security, 2026</a>.
-  </footer>
-</main>
+    <a href="https://www.ssa.gov/policy/docs/chartbooks/fast_facts/2026/fast_facts26.html">SSA: Social Security, 2026</a></p>
+  </section>
+  <nav class="pager">
+    <a href="../reference/us-market-map.html">Reference</a>
+    <a href="0002-calls-and-puts.html">Lesson 02: Calls and Puts →</a>
+    <a href="../../../../">All topics</a>
+  </nav>
+  <p class="ask">Anything unclear? Ask your tutor a follow-up question.</p>
+</footer>
 </body>
 </html>
