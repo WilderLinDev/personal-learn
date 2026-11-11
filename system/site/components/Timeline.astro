@@ -6,15 +6,16 @@ const { pages, topics } = Astro.props;
 const days = groupBy(pages, (p) => formatDate(lastChange(p)));
 const topicTitle = (slug: string) => topics.find((t) => t.slug === slug)?.title ?? slug;
 ---
-<ol class="timeline">
+<ol class="relative grid gap-6 border-l pl-6">
   {days.map((day) => (
-    <li class="day">
-      <time>{day.key.replace(/ \d{4}$/, '')}</time>
-      <ul>
+    <li class="relative">
+      <span class="absolute top-1.5 -left-[1.6rem] size-2 rounded-full bg-border ring-4 ring-background" aria-hidden="true"></span>
+      <time class="text-xs font-medium text-muted-foreground tabular-nums">{day.key.replace(/ \d{4}$/, '')}</time>
+      <ul class="mt-1.5 grid gap-1.5">
         {day.items.map((p) => (
-          <li>
-            <a href={p.url}>{p.title}</a>
-            <span class="meta-inline">{kindLabel(p)} · {topicTitle(p.topic)}{p.updated && ' · updated'}</span>
+          <li class="flex flex-wrap items-baseline gap-x-2">
+            <a href={p.url} class="font-medium underline-offset-4 hover:text-brand hover:underline">{p.title}</a>
+            <span class="text-xs text-muted-foreground">{kindLabel(p)} · {topicTitle(p.topic)}{p.updated && ' · updated'}</span>
           </li>
         ))}
       </ul>

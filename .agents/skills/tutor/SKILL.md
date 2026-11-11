@@ -11,7 +11,7 @@ Answer quick factual questions directly, without lessons or files.
 
 ## 1. Workspaces
 
-Each topic is one Teach workspace: `vault/topics/<slug>/`, containing everything Teach describes (`MISSION.md`, `RESOURCES.md`, `GLOSSARY.md`, `NOTES.md`, `lessons/`, `reference/`, `learning-records/`, `assets/`) plus `reviews.json`. Teach's `*-FORMAT.md` files are in `system/teach/`.
+Each topic is one Teach workspace: `vault/topics/<slug>/`, containing everything Teach describes (`MISSION.md`, `RESOURCES.md`, `GLOSSARY.md`, `NOTES.md`, `lessons/`, `reference/`, `learning-records/`, `simulations/`) plus `reviews.json`. Teach's `*-FORMAT.md` files are in `system/teach/`.
 
 Above the topics:
 - `vault/NORTH-STAR.md`: the learner's long-term goals and the list of topics, one line each with its mission.
@@ -29,7 +29,7 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
 
 1. **Start.** Read the topic's files as Teach requires. Run `python3 system/scripts/review.py due` and review due items for this topic first, following the review skill.
 2. **Mastery gate.** Do not start a new lesson while this topic has items that were never answered correctly or are overdue. Close those gaps first.
-3. **Lesson.** As Teach describes, except that lessons and reference documents are Markdown in the format of [system/site/README.md](../../../system/site/README.md): front matter, Markdown, and its components only, never HTML. This replaces Teach's self-contained HTML files and per-workspace stylesheet; a topic's `assets/` holds only files for `::embed`. With a shell, run `npm run build` before saving and fix every error. Instead of opening a file, give the lesson's Site link. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
+3. **Lesson.** As Teach describes, except that lessons and reference documents are Markdown in the format of [system/site/README.md](../../../system/site/README.md): front matter, Markdown, and its components only, never HTML. This replaces Teach's self-contained HTML files, per-workspace stylesheet, and `assets/`: interactive parts are the Site's Components, and a topic's `simulations/` holds only its Simulations. Draw a Diagram wherever structure, flow, or relationships are easier to see than to read. With a shell, run `npm run build` before saving and fix every error. Instead of opening a file, give the lesson's Site link. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
 4. **Practice.** Teach's feedback loop, plus:
    - Ask for confidence first (`guess` / `unsure` / `sure`), then the answer from memory, then corrective feedback with the reason. Give extra attention to wrong `sure` answers.
    - Never solve the learner's own exercise. Give hints and leading questions until they produce the answer.

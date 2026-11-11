@@ -1,36 +1,49 @@
 ---
+import { ArrowLeft } from '@lucide/astro';
 import Base from '../../../layouts/Base.astro';
-import { formatDate, kindLabel, loadSite } from '../../../lib/site';
+import { formatDate, loadSite } from '../../../lib/site';
 
 export async function getStaticPaths() {
   const site = await loadSite();
   return site.topics.map((topic) => ({ params: { topic: topic.slug }, props: { topic } }));
 }
 const { topic } = Astro.props;
+const label = 'text-xs font-semibold tracking-wider text-muted-foreground uppercase';
 ---
 <Base title={topic.title} nav="topics">
-  <div class="crumbs wrap"><a href="/topics/">← Topics</a></div>
-  <main class="wrap">
-    <header class="page-head">
-      <h1>{topic.title}</h1>
-      {topic.why && <p class="lead">{topic.why}</p>}
+  <main id="main" class="mx-auto max-w-3xl px-4 sm:px-6">
+    <nav class="pt-8 text-sm text-muted-foreground" aria-label="Breadcrumb">
+      <a href="/topics/" class="inline-flex items-center gap-1.5 hover:text-foreground"><ArrowLeft class="size-4" />Topics</a>
+    </nav>
+    <header class="pt-10 pb-4">
+      <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{topic.title}</h1>
+      {topic.why && <p class="mt-5 text-lg leading-relaxed text-pretty text-muted-foreground">{topic.why}</p>}
     </header>
     {topic.lessons.length > 0 && (
-      <section>
-        <h2 class="section-label">Lessons</h2>
-        <ol class="toc">
+      <section class="mt-10">
+        <h2 class={label}>Lessons</h2>
+        <ol class="mt-4 divide-y rounded-xl border">
           {topic.lessons.map((p) => (
-            <li><a href={p.url}><span class="toc-num">{kindLabel(p).replace('Lesson ', '')}</span><span class="toc-title">{p.title}</span><span class="toc-date">{formatDate(p.date)}</span></a></li>
+            <li>
+              <a href={p.url} class="group flex items-baseline gap-4 px-5 py-4 transition-colors hover:bg-tint">
+                <span class="w-6 shrink-0 font-mono text-sm text-muted-foreground tabular-nums group-hover:text-brand">{String(p.number).padStart(2, '0')}</span>
+                <span class="flex-1">
+                  <span class="block font-medium">{p.title}</span>
+                  <span class="mt-0.5 line-clamp-1 block text-sm text-muted-foreground">{p.lead}</span>
+                </span>
+                <span class="hidden shrink-0 text-xs text-muted-foreground sm:block">{formatDate(p.date)}</span>
+              </a>
+            </li>
           ))}
         </ol>
       </section>
     )}
     {topic.reference.length > 0 && (
-      <section>
-        <h2 class="section-label">Reference</h2>
-        <ul class="toc">
+      <section class="mt-10">
+        <h2 class={label}>Reference</h2>
+        <ul class="mt-4 divide-y rounded-xl border">
           {topic.reference.map((p) => (
-            <li><a href={p.url}><span class="toc-title">{p.title}</span></a></li>
+            <li><a href={p.url} class="block px-5 py-4 font-medium transition-colors hover:bg-tint">{p.title}</a></li>
           ))}
         </ul>
       </section>

@@ -25,6 +25,18 @@ _Avoid_: Website, blog
 The one look shared by every page of the Site: its layouts, its fixed set of components, and one stylesheet.
 _Avoid_: Style, skin
 
+**Component**:
+A named building block a lesson or reference document may use, from the fixed set the Design defines. A page cannot add its own; a Topic's Simulation is the one exception.
+_Avoid_: Widget, block, shortcode
+
+**Diagram**:
+A Component that shows structure, flow, or relationships as a hand-drawn-style picture, written as text by the tutor.
+_Avoid_: Chart, figure, drawing
+
+**Simulation**:
+An interactive piece that belongs to one Topic, such as a payoff explorer, shown inside its page in the Design. The only way a page goes beyond the fixed Components.
+_Avoid_: Embed, widget, demo
+
 **Theme**:
 The learner's own settings on top of the Design, such as the accent colour.
 

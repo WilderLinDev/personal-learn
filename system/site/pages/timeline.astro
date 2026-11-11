@@ -7,11 +7,11 @@ const site = await loadSite();
 const months = groupBy(site.timeline, (p) => formatMonth(lastChange(p)));
 ---
 <Base title="Timeline" nav="home">
-  <main class="wrap">
-    <header class="page-head"><h1>Timeline</h1></header>
+  <main id="main" class="mx-auto max-w-3xl px-4 pt-12 sm:px-6 sm:pt-16">
+    <h1 class="text-4xl font-semibold tracking-tight">Timeline</h1>
     {months.map((m) => (
-      <section>
-        <h2 class="section-label">{m.key}</h2>
+      <section class="mt-12">
+        <h2 class="mb-5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">{m.key}</h2>
         <Timeline pages={m.items} topics={site.topics} />
       </section>
     ))}

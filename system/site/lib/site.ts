@@ -11,6 +11,7 @@ export type Page = {
   lead: string;
   date: Date;
   updated?: Date;
+  minutes?: number;
   entry: CollectionEntry<'lessons'> | CollectionEntry<'reference'>;
 };
 export type Topic = { slug: string; title: string; why: string; lessons: Page[]; reference: Page[] };
@@ -33,6 +34,7 @@ const toPage = (kind: Kind) => (entry: CollectionEntry<'lessons'> | CollectionEn
     lead: entry.data.lead,
     date: entry.data.date,
     updated: entry.data.updated,
+    minutes: 'minutes' in entry.data ? entry.data.minutes : undefined,
     entry,
   };
 };

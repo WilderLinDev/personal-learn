@@ -12,3 +12,5 @@ wrangler.jsonc
 package.json
 package-lock.json
 astro.config.mjs
+tsconfig.json
+components.json

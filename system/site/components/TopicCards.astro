@@ -1,15 +1,20 @@
 ---
+import { ArrowUpRight } from '@lucide/astro';
 import type { Topic } from '../lib/site';
 
 interface Props { topics: Topic[] }
 const { topics } = Astro.props;
 const count = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 ---
-<div class="topic-cards">
+<div class="grid gap-4 sm:grid-cols-2">
   {topics.map((t) => (
-    <a class="topic-card" href={`/topics/${t.slug}/`}>
-      <strong>{t.title}</strong>
-      <span>{count(t.lessons.length, 'lesson')} · {t.reference.length} reference</span>
+    <a href={`/topics/${t.slug}/`} class="group flex flex-col rounded-xl border bg-card p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md">
+      <span class="flex items-start justify-between gap-3">
+        <strong class="text-lg font-semibold tracking-tight">{t.title}</strong>
+        <ArrowUpRight class="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-brand" />
+      </span>
+      {t.why && <span class="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{t.why}</span>}
+      <span class="mt-4 text-xs font-medium text-muted-foreground">{count(t.lessons.length, 'lesson')} · {t.reference.length} reference</span>
     </a>
   ))}
 </div>
