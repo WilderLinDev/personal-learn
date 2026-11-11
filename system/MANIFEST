@@ -10,7 +10,15 @@ LICENSE
 system
 wrangler.jsonc
 package.json
-package-lock.json
-astro.config.mjs
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.nvmrc
+astro.config.ts
 tsconfig.json
 components.json
+eslint.config.js
+.prettierrc.json
+.prettierignore
+vitest.config.ts
+pyproject.toml
+.github
