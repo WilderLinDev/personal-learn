@@ -1,0 +1,31 @@
+---
+import '../styles/learn.css';
+import '../../../vault/theme.css';
+
+interface Props { title: string; nav?: 'home' | 'topics' | 'glossary'; bodyClass?: string }
+const { title, nav, bodyClass } = Astro.props;
+const links = [
+  { href: '/', label: 'Home', id: 'home' },
+  { href: '/topics/', label: 'Topics', id: 'topics' },
+  { href: '/glossary/', label: 'Glossary', id: 'glossary' },
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title === 'Learning' ? title : `${title} · Learning`}</title>
+</head>
+<body class={bodyClass}>
+  <header class="topbar">
+    <nav class="wrap topbar-inner" aria-label="Site">
+      <a class="wordmark" href="/">Learning</a>
+      <span class="topbar-links">
+        {links.slice(1).map((l) => <a href={l.href} aria-current={nav === l.id ? 'page' : undefined}>{l.label}</a>)}
+      </span>
+    </nav>
+  </header>
+  <slot />
+</body>
+</html>

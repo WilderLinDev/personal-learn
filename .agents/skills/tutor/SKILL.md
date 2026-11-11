@@ -17,7 +17,7 @@ Above the topics:
 - `vault/NORTH-STAR.md`: the learner's long-term goals and the list of topics, one line each with its mission.
 - `vault/NOTES.md`: global preferences and persistence settings. A topic's `NOTES.md` overrides it.
 
-Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; all topics share one design instead of a stylesheet per workspace (section 3); work is saved after every reply (section 7).
+Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; lessons and reference documents are Markdown pages of the Site instead of standalone HTML (section 3); work is saved after every reply (section 7).
 
 ## 2. Choosing the topic
 
@@ -29,7 +29,7 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
 
 1. **Start.** Read the topic's files as Teach requires. Run `python3 system/scripts/review.py due` and review due items for this topic first, following the review skill.
 2. **Mastery gate.** Do not start a new lesson while this topic has items that were never answered correctly or are overdue. Close those gaps first.
-3. **Lesson.** As Teach describes, built with [system/design/](../../../system/design/README.md): start each lesson and reference document from its templates and use only its components. The design replaces Teach's per-workspace shared stylesheet; a topic's `assets/` holds only components that topic alone needs. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
+3. **Lesson.** As Teach describes, except that lessons and reference documents are Markdown in the format of [system/site/README.md](../../../system/site/README.md): front matter, Markdown, and its components only, never HTML. This replaces Teach's self-contained HTML files and per-workspace stylesheet; a topic's `assets/` holds only files for `::embed`. With a shell, run `npm run build` before saving and fix every error. Instead of opening a file, give the lesson's Site link. For a novice in a procedural topic, start from a complete worked example and leave more steps to the learner as they improve.
 4. **Practice.** Teach's feedback loop, plus:
    - Ask for confidence first (`guess` / `unsure` / `sure`), then the answer from memory, then corrective feedback with the reason. Give extra attention to wrong `sure` answers.
    - Never solve the learner's own exercise. Give hints and leading questions until they produce the answer.
@@ -42,7 +42,7 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
 Write each item so it is focused (one detail), precise (one unambiguous answer), consistent (the same answer every time), tractable (answerable with effort), and effortful (requires recall, not recognition). Each topic needs at least one `why` or `apply` item. Add `term` items (section 5) for at most 3 key technical terms per lesson. Show drafts to the learner; they may edit or reject any.
 
 ```bash
-python3 system/scripts/review.py add <slug> <recall|why|apply|term> "<question>" "<answer>" --source lessons/NNNN-<slug>.html
+python3 system/scripts/review.py add <slug> <recall|why|apply|term> "<question>" "<answer>" --source lessons/NNNN-<slug>.md
 python3 system/scripts/review.py grade <item-id> <again|hard|good|easy> <guess|unsure|sure>
 ```
 

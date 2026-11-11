@@ -1,0 +1,16 @@
+---
+import { render } from 'astro:content';
+import Page from '../../../../layouts/Page.astro';
+import { loadSite } from '../../../../lib/site';
+
+export async function getStaticPaths() {
+  const site = await loadSite();
+  return site.timeline.map((page) => ({
+    params: { topic: page.topic, kind: page.kind, page: page.slug },
+    props: { page, topic: site.topic(page.topic) },
+  }));
+}
+const { page, topic } = Astro.props;
+const { Content } = await render(page.entry);
+---
+<Page page={page} topic={topic}><Content /></Page>

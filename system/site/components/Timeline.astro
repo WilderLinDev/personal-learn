@@ -1,0 +1,23 @@
+---
+import { formatDate, groupBy, kindLabel, lastChange, type Page, type Topic } from '../lib/site';
+
+interface Props { pages: Page[]; topics: Topic[] }
+const { pages, topics } = Astro.props;
+const days = groupBy(pages, (p) => formatDate(lastChange(p)));
+const topicTitle = (slug: string) => topics.find((t) => t.slug === slug)?.title ?? slug;
+---
+<ol class="timeline">
+  {days.map((day) => (
+    <li class="day">
+      <time>{day.key.replace(/ \d{4}$/, '')}</time>
+      <ul>
+        {day.items.map((p) => (
+          <li>
+            <a href={p.url}>{p.title}</a>
+            <span class="meta-inline">{kindLabel(p)} · {topicTitle(p.topic)}{p.updated && ' · updated'}</span>
+          </li>
+        ))}
+      </ul>
+    </li>
+  ))}
+</ol>

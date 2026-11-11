@@ -1,4 +1,6 @@
 .DS_Store
 *.json.tmp
 __pycache__/
-_site/
+node_modules/
+dist/
+.astro/

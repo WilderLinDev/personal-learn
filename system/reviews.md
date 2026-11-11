@@ -11,7 +11,7 @@
       "kind": "recall",
       "question": "What does an ETF hold?",
       "answer": "A basket of assets, usually tracking an index.",
-      "source": "lessons/0001-etf-basics.html",
+      "source": "lessons/0001-etf-basics.md",
       "created": "2026-11-11",
       "interval": 1,
       "due": "2026-11-12",

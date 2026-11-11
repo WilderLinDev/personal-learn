@@ -18,11 +18,11 @@ One learner's repository: the System plus a populated Vault.
 _Avoid_: Fork
 
 **Site**:
-The published lessons and reference documents of an Instance, with an index.
+The published website of an Instance: its topics, lessons, reference documents, timeline, and glossary.
 _Avoid_: Website, blog
 
 **Design**:
-The one look shared by every lesson and reference document in all topics: one stylesheet, page templates, and a fixed set of components.
+The one look shared by every page of the Site: its layouts, its fixed set of components, and one stylesheet.
 _Avoid_: Style, skin
 
 **Theme**:

@@ -1,0 +1,58 @@
+---
+import Base from './Base.astro';
+import { formatDate, kindLabel, type Page, type Topic } from '../lib/site';
+
+interface Props { page: Page; topic: Topic }
+const { page, topic } = Astro.props;
+const data = page.entry.data as Record<string, any>;
+const siblings = topic.lessons;
+const at = siblings.findIndex((p) => p.slug === page.slug);
+const prev = page.kind === 'lessons' ? siblings[at - 1] : undefined;
+const next = page.kind === 'lessons' ? siblings[at + 1] : undefined;
+const position = page.kind === 'lessons' ? `${at + 1} / ${siblings.length}` : 'Reference';
+const meta = [formatDate(page.date), page.updated && `updated ${formatDate(page.updated)}`, data.minutes && `${data.minutes} min`, data.summary]
+  .filter(Boolean)
+  .join(' · ');
+---
+<Base title={page.title} bodyClass={page.kind === 'lessons' ? 'lesson' : 'reference'}>
+  <div class="crumbs wrap">
+    <a href={`/topics/${topic.slug}/`}>← {topic.title}</a>
+    <span>{position}</span>
+  </div>
+  <header class="masthead wrap">
+    <p class="kicker">{kindLabel(page)}</p>
+    <h1>{page.title}</h1>
+    <p class="lead">{page.lead}</p>
+    <p class="meta">{meta}</p>
+  </header>
+  <main class="wrap prose">
+    <slot />
+  </main>
+  <footer class="colophon wrap">
+    {data.source && (
+      <section class="source">
+        <h2>Primary source</h2>
+        <p><a href={data.source.url}>{data.source.title}</a></p>
+        {data.further?.length > 0 && (
+          <p>Further reading: {data.further.map((l: any, i: number) => <>{i > 0 && ' · '}<a href={l.url}>{l.title}</a></>)}</p>
+        )}
+      </section>
+    )}
+    {data.sources && (
+      <section class="source">
+        <h2>Sources</h2>
+        <p>{data.sources.map((l: any, i: number) => <>{i > 0 && ' · '}<a href={l.url}>{l.title}</a></>)}</p>
+      </section>
+    )}
+    <nav class="pager" aria-label="Lessons">
+      {prev ? <a class="prev" href={prev.url}><span>Previous</span>{prev.title}</a> : <span />}
+      {next && <a class="next" href={next.url}><span>Next</span>{next.title}</a>}
+    </nav>
+    <p class="related">
+      {page.kind === 'lessons'
+        ? topic.reference.map((r) => <a href={r.url}>Reference: {r.title}</a>)
+        : topic.lessons.map((l) => <a href={l.url}>{kindLabel(l)}: {l.title}</a>)}
+    </p>
+    {page.kind === 'lessons' && <p class="ask">Anything unclear? Ask your tutor a follow-up question.</p>}
+  </footer>
+</Base>

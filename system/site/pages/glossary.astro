@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { loadSite, parseGlossary } from '../lib/site';
+
+const site = await loadSite();
+const glossaries = await getCollection('glossaries');
+const topics = site.topics
+  .map((t) => ({ topic: t, groups: parseGlossary(glossaries.find((g) => g.id.split('/')[0] === t.slug)?.body ?? '') }))
+  .filter((t) => t.groups.length > 0);
+---
+<Base title="Glossary" nav="glossary">
+  <main class="wrap">
+    <header class="page-head"><h1>Glossary</h1></header>
+    {topics.length === 0 ? (
+      <p class="muted">Terms appear here once you can explain and use them.</p>
+    ) : (
+      <>
+        <input class="search" type="search" placeholder="Search terms" aria-label="Search terms" data-glossary-search />
+        {topics.map(({ topic, groups }) => (
+          <section data-glossary-topic>
+            <h2 class="section-label"><a href={`/topics/${topic.slug}/`}>{topic.title}</a></h2>
+            {groups.map((g) => (
+              <>
+                {g.group && <h3>{g.group}</h3>}
+                <dl class="glossary">
+                  {g.terms.map((t) => (
+                    <div data-glossary-term>
+                      <dt>{t.term}</dt>
+                      <dd>{t.definition}{t.avoid && <span class="avoid">Avoid: {t.avoid}</span>}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </>
+            ))}
+          </section>
+        ))}
+        <p class="muted" data-glossary-empty hidden>No matching terms.</p>
+      </>
+    )}
+  </main>
+  <script>
+    const input = document.querySelector<HTMLInputElement>('[data-glossary-search]');
+    input?.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      document.querySelectorAll<HTMLElement>('[data-glossary-topic]').forEach((section) => {
+        let any = false;
+        section.querySelectorAll<HTMLElement>('[data-glossary-term]').forEach((term) => {
+          const hit = !q || term.textContent!.toLowerCase().includes(q);
+          term.hidden = !hit;
+          any ||= hit;
+          if (hit) shown++;
+        });
+        section.hidden = !any;
+      });
+      document.querySelector<HTMLElement>('[data-glossary-empty]')!.hidden = shown > 0;
+    });
+  </script>
+</Base>

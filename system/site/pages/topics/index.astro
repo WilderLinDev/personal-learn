@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import TopicCards from '../../components/TopicCards.astro';
+import { loadSite } from '../../lib/site';
+
+const site = await loadSite();
+---
+<Base title="Topics" nav="topics">
+  <main class="wrap">
+    <header class="page-head"><h1>Topics</h1></header>
+    <TopicCards topics={site.topics} />
+  </main>
+</Base>

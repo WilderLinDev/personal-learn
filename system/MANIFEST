@@ -9,3 +9,6 @@ LICENSE
 .claude
 system
 wrangler.jsonc
+package.json
+package-lock.json
+astro.config.mjs

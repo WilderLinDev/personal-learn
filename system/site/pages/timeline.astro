@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import { formatMonth, groupBy, lastChange, loadSite } from '../lib/site';
+
+const site = await loadSite();
+const months = groupBy(site.timeline, (p) => formatMonth(lastChange(p)));
+---
+<Base title="Timeline" nav="home">
+  <main class="wrap">
+    <header class="page-head"><h1>Timeline</h1></header>
+    {months.map((m) => (
+      <section>
+        <h2 class="section-label">{m.key}</h2>
+        <Timeline pages={m.items} topics={site.topics} />
+      </section>
+    ))}
+  </main>
+</Base>

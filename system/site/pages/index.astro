@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import TopicCards from '../components/TopicCards.astro';
+import { kindLabel, loadSite } from '../lib/site';
+
+const site = await loadSite();
+const latest = site.timeline.find((p) => p.kind === 'lessons');
+const latestTopic = latest && site.topic(latest.topic);
+const recent = site.timeline.slice(0, 10);
+---
+<Base title="Learning" nav="home" bodyClass="home">
+  <main class="wrap">
+    {latest ? (
+      <a class="continue" href={latest.url}>
+        <span class="label">Continue</span>
+        <strong>{latest.title}</strong>
+        <span class="meta">{latestTopic?.title} · {kindLabel(latest)}{latest.entry.data.minutes && ` · ${latest.entry.data.minutes} min`}</span>
+      </a>
+    ) : (
+      <div class="empty">
+        <h1>Start your first topic</h1>
+        <p>Tell your tutor what you want to learn. Lessons appear here as you go.</p>
+      </div>
+    )}
+    {recent.length > 0 && (
+      <section>
+        <h2 class="section-label">Recent</h2>
+        <Timeline pages={recent} topics={site.topics} />
+        {site.timeline.length > recent.length && <p class="more"><a href="/timeline/">Full timeline →</a></p>}
+      </section>
+    )}
+    {site.topics.length > 0 && (
+      <section>
+        <h2 class="section-label">Topics</h2>
+        <TopicCards topics={site.topics} />
+      </section>
+    )}
+  </main>
+</Base>

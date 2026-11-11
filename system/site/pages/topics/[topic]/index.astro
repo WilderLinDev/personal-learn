@@ -1,0 +1,39 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { formatDate, kindLabel, loadSite } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const site = await loadSite();
+  return site.topics.map((topic) => ({ params: { topic: topic.slug }, props: { topic } }));
+}
+const { topic } = Astro.props;
+---
+<Base title={topic.title} nav="topics">
+  <div class="crumbs wrap"><a href="/topics/">← Topics</a></div>
+  <main class="wrap">
+    <header class="page-head">
+      <h1>{topic.title}</h1>
+      {topic.why && <p class="lead">{topic.why}</p>}
+    </header>
+    {topic.lessons.length > 0 && (
+      <section>
+        <h2 class="section-label">Lessons</h2>
+        <ol class="toc">
+          {topic.lessons.map((p) => (
+            <li><a href={p.url}><span class="toc-num">{kindLabel(p).replace('Lesson ', '')}</span><span class="toc-title">{p.title}</span><span class="toc-date">{formatDate(p.date)}</span></a></li>
+          ))}
+        </ol>
+      </section>
+    )}
+    {topic.reference.length > 0 && (
+      <section>
+        <h2 class="section-label">Reference</h2>
+        <ul class="toc">
+          {topic.reference.map((p) => (
+            <li><a href={p.url}><span class="toc-title">{p.title}</span></a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </main>
+</Base>
