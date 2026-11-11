@@ -8,7 +8,7 @@ type Island = { load: () => Promise<{ default: ComponentType<any> }>; props: (el
 const ISLANDS: Record<string, Island> = {
   diagram: {
     load: () => import('./Diagram'),
-    props: (el) => ({ code: el.dataset.code ?? '' }),
+    props: (el) => ({ code: el.dataset.code ?? '', caption: el.parentElement?.querySelector('figcaption')?.textContent ?? '' }),
   },
   choice: {
     load: () => import('./Choice'),

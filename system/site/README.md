@@ -40,7 +40,31 @@ The Site adds the header, breadcrumbs, lesson number, previous / next links, sou
 - Link to other pages by path: `/topics/<topic>/lessons/<file name without .md>/`.
 - Gloss a term on first use: `**separation of powers（权力分立）**`.
 
-## Components
+## Lesson shape
+
+Every lesson follows the same order, so the learner always knows where they are:
+
+1. `key[The core model]`: the whole lesson in two to four sentences, before any detail.
+2. Numbered `##` sections, three to seven, each one idea. The last is usually a complete worked example (`steps`).
+3. `check` last: one retrieval question on the core model.
+
+Inside a section, pick the Component by the shape of the content, and keep plain paragraphs for the reasoning between them:
+
+| The content is… | Use |
+|---|---|
+| Parts and how they connect: a structure, a flow, a cycle, a hierarchy, cause and effect | `diagram` |
+| Two to four things of the same kind side by side | `cards`, or a table when they share attributes |
+| An order of actions or a calculation | `steps` |
+| A few numbers that carry the point | `stats` |
+| New vocabulary | `terms` |
+| A caveat, exception, or side remark | `note` |
+| Something the reader must try with their own inputs | `simulation` |
+
+- Draw a `diagram` in every lesson whose topic has structure or flow; one or two per lesson, each in the section it explains.
+- At most two `key` per lesson, one `note` per section, no Component directly after another of the same kind.
+
+A reference document has no `key`, numbering, or `check`: `##` sections by subject, written for lookup, with tables, `terms`, and `diagram`.
+
 
 A component is a fenced block: `:::name[optional label]` … `:::`. An outer block that contains another uses one more colon (`::::`). Unknown components fail the build.
 

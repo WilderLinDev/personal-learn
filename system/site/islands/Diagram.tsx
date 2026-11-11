@@ -1,5 +1,7 @@
 // A Diagram: Mermaid source drawn in the hand-drawn look, in the Design's colours.
 import { useEffect, useId, useState } from 'react';
+import { Maximize2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 // Mermaid only understands hex and rgb; resolve any CSS colour (oklch, color-mix) through a canvas.
 function hex(variable: string) {
@@ -41,7 +43,7 @@ function fit(svg: string) {
 
 let queue = Promise.resolve();
 
-export default function Diagram({ code }: { code: string }) {
+export default function Diagram({ code, caption }: { code: string; caption: string }) {
   const id = `diagram-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const dark = useDark();
   const [svg, setSvg] = useState<string>();
@@ -108,5 +110,26 @@ export default function Diagram({ code }: { code: string }) {
     );
   }
   if (!svg) return <div className="h-40 w-full animate-pulse rounded-lg bg-muted" aria-label="Loading diagram" />;
-  return <div className="contents" role="img" dangerouslySetInnerHTML={{ __html: svg }} />;
+  return (
+    <Dialog>
+      <DialogTrigger
+        className="group relative flex w-full cursor-zoom-in justify-center-safe rounded-lg focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+        aria-label={`Enlarge diagram${caption ? `: ${caption}` : ''}`}
+      >
+        <span className="contents" dangerouslySetInnerHTML={{ __html: svg }} />
+        <span className="absolute top-0 right-0 flex size-8 items-center justify-center rounded-md border bg-background/90 text-muted-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
+          <Maximize2 className="size-4" />
+        </span>
+      </DialogTrigger>
+      <DialogContent className="max-h-[92dvh] gap-3 overflow-auto p-4 sm:max-w-[min(96vw,1400px)] sm:p-6">
+        <DialogTitle className="pr-8 text-base">{caption || 'Diagram'}</DialogTitle>
+        <div
+          className="flex justify-center-safe overflow-auto [&_svg]:h-auto [&_svg]:max-h-[80dvh] [&_svg]:!max-w-full [&_svg]:!min-w-0"
+          role="img"
+          aria-label={caption || 'Diagram'}
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }

@@ -328,15 +328,6 @@
   }
 
   /* Pronunciation. */
-  .say-para {
-    @apply ml-1 inline-flex size-6 -translate-y-px items-center justify-center rounded-md align-middle text-muted-foreground/60 transition-colors hover:bg-accent hover:text-brand;
-  }
-  .say-para[data-state='loading'] {
-    @apply animate-pulse text-brand;
-  }
-  .say-para[data-state='playing'] {
-    @apply text-brand;
-  }
   ::highlight(say) {
     background: color-mix(in oklab, var(--brand) 20%, transparent);
   }

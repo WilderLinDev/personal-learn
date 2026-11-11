@@ -1,7 +1,6 @@
 // Pronunciation for every lesson and reference document: tap a word for its US IPA, gloss, and
-// sound; play any paragraph. Playback: lib/speech.ts.
+// sound; select any text to hear it. Playback: lib/speech.ts.
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { createPortal } from 'react-dom';
 import { Loader2, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -11,7 +10,7 @@ import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { DEFAULT_VOICE, loadSettings, player, saveSettings, speakable, type PlayState, type Settings } from '@/lib/speech';
 import { cn } from '@/lib/utils';
 
-type Hit = { value: string; range: Range; rect: DOMRect; gloss?: string };
+type Hit = { kind: 'word' | 'selection'; value: string; range: Range; gloss?: string };
 type Request = { text: string; owner: object; onState: (s: PlayState) => void; onError: (m: string) => void };
 
 function wordAt(x: number, y: number): Hit | undefined {
@@ -35,7 +34,7 @@ function wordAt(x: number, y: number): Hit | undefined {
   const rect = range.getBoundingClientRect();
   if (x < rect.left - 2 || x > rect.right + 2 || y < rect.top - 2 || y > rect.bottom + 2) return;
   const gloss = text.slice(end).match(/^\s*（([^）]+)）/)?.[1];
-  return { value, range, rect, gloss };
+  return { kind: 'word', value, range, gloss };
 }
 
 function PlayButton({ state, label, className, onClick }: { state: PlayState; label: string; className?: string; onClick: () => void }) {
@@ -46,28 +45,13 @@ function PlayButton({ state, label, className, onClick }: { state: PlayState; la
   );
 }
 
-function ParagraphPlay({ text, play }: { text: string; play: (r: Request) => void }) {
-  const [state, setState] = useState<PlayState>('idle');
-  const owner = useRef({});
-  return (
-    <PlayButton
-      state={state}
-      label="Play paragraph"
-      className="say-para"
-      onClick={() => play({ text, owner: owner.current, onState: setState, onError: (m) => window.dispatchEvent(new CustomEvent('say-toast', { detail: m })) })}
-    />
-  );
-}
-
 export default function Speech({ ipa }: { ipa: Record<string, string> }) {
   const [hit, setHit] = useState<Hit>();
-  const [wordState, setWordState] = useState<PlayState>('idle');
-  const [wordError, setWordError] = useState('');
+  const [playState, setPlayState] = useState<PlayState>('idle');
+  const [error, setError] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [toast, setToast] = useState('');
-  const [hosts, setHosts] = useState<{ el: HTMLElement; text: string }[]>([]);
   const pending = useRef<Request | undefined>(undefined);
-  const wordOwner = useRef({});
+  const owner = useRef({});
 
   const play = useCallback((r: Request) => {
     player.unlock();
@@ -75,6 +59,7 @@ export default function Speech({ ipa }: { ipa: Record<string, string> }) {
     const settings = loadSettings();
     if (!settings) {
       pending.current = r;
+      current.current = undefined;
       setHit(undefined);
       setSettingsOpen(true);
       return;
@@ -82,58 +67,68 @@ export default function Speech({ ipa }: { ipa: Record<string, string> }) {
     player.play(r.text, settings, r.owner, r.onState).catch((e: Error) => r.onError(`Couldn't play: ${e.message}`));
   }, []);
 
-  // Highlight the tapped word.
+  const current = useRef<Hit | undefined>(undefined);
+  const show = useCallback((next: Hit | undefined) => {
+    if (next?.kind === 'selection' && current.current?.kind === 'selection' && next.value === current.current.value) return;
+    current.current = next;
+    if (player.isPlaying(owner.current)) player.stop();
+    setError('');
+    setHit(next);
+  }, []);
+
+  // Highlight a tapped word; a selection already shows as selected.
   useEffect(() => {
     if (!('highlights' in CSS)) return;
     const highlight = new Highlight();
     CSS.highlights.set('say', highlight);
-    if (hit) highlight.add(hit.range);
+    if (hit?.kind === 'word') highlight.add(hit.range);
     return () => highlight.clear();
   }, [hit]);
 
-  // Paragraph buttons and word taps.
+  // Tap a word, or select any text, inside the lesson.
   useEffect(() => {
     const prose = document.querySelector<HTMLElement>('.prose');
     if (!prose) return;
-    const found: { el: HTMLElement; text: string }[] = [];
-    prose.querySelectorAll<HTMLElement>('p, li').forEach((block) => {
-      if (block.closest('table, .component-label, .foot, .stats, summary, [data-island], .not-prose') || block.querySelector('p, li')) return;
-      const text = speakable(block.textContent || '');
-      if (text.split(' ').length < 4) return;
-      const el = document.createElement('span');
-      el.className = 'say-host';
-      block.append(' ', el);
-      found.push({ el, text });
-    });
-    setHosts(found);
+    const skip = 'a, button, summary, input, [data-island], .not-prose';
+
+    const fromSelection = (): Hit | undefined => {
+      const selection = document.getSelection();
+      if (!selection || selection.isCollapsed || !selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      const container = range.commonAncestorContainer;
+      const element = container instanceof Element ? container : container.parentElement;
+      if (!prose.contains(container) || element?.closest(skip)) return;
+      const value = speakable(selection.toString());
+      if (!/[A-Za-z]/.test(value)) return;
+      return { kind: 'selection', value, range: range.cloneRange() };
+    };
 
     const onClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('a, button, summary, input, [data-island], .not-prose')) return;
+      if ((event.target as HTMLElement).closest(skip)) return;
       if (!document.getSelection()?.isCollapsed) return;
-      const next = wordAt(event.clientX, event.clientY);
-      if (player.isPlaying(wordOwner.current)) player.stop();
-      setWordError('');
-      setHit(next);
+      show(wordAt(event.clientX, event.clientY));
+    };
+    // Selections made by mouse, keyboard, or touch handles all end in selectionchange.
+    let timer: number | undefined;
+    const onSelection = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const next = fromSelection();
+        if (next) show(next);
+      }, 350);
     };
     prose.addEventListener('click', onClick);
-    const onToast = (e: Event) => setToast((e as CustomEvent<string>).detail);
-    window.addEventListener('say-toast', onToast);
+    document.addEventListener('selectionchange', onSelection);
     return () => {
+      window.clearTimeout(timer);
       prose.removeEventListener('click', onClick);
-      window.removeEventListener('say-toast', onToast);
-      found.forEach(({ el }) => el.remove());
+      document.removeEventListener('selectionchange', onSelection);
     };
-  }, []);
+  }, [show]);
 
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(''), 5000);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
-
-  const key = hit?.value.toLowerCase().replace(/’/g, "'") ?? '';
-  const sound = ipa[key] ?? ipa[key.replace(/'s$/, '')];
+  const single = hit && /^[A-Za-z'’]+$/.test(hit.value);
+  const key = single ? hit.value.toLowerCase().replace(/’/g, "'") : '';
+  const sound = key ? (ipa[key] ?? ipa[key.replace(/'s$/, '')]) : undefined;
 
   const closeSettings = (next: Settings | null | undefined) => {
     if (next !== undefined) saveSettings(next);
@@ -161,37 +156,43 @@ export default function Speech({ ipa }: { ipa: Record<string, string> }) {
 
   return (
     <>
-      {hosts.map(({ el, text }) => createPortal(<ParagraphPlay text={text} play={play} />, el))}
-
-      <Popover open={Boolean(hit)} onOpenChange={(open) => !open && setHit(undefined)}>
+      <Popover open={Boolean(hit)} onOpenChange={(open) => !open && show(undefined)}>
         <PopoverAnchor virtualRef={{ current: { getBoundingClientRect: () => hit?.range.getBoundingClientRect() ?? new DOMRect() } }} />
         <PopoverContent
           aria-label="Pronunciation"
           className="w-64"
           onOpenAutoFocus={(e) => e.preventDefault()}
           onInteractOutside={(e) => {
-            if ((e.target as HTMLElement).closest?.('.prose')) e.preventDefault();
+            // Taps and selections in the lesson move the popover instead of closing it.
+            const target = e.target as HTMLElement;
+            if (target.closest?.('.prose') && !target.closest('a, button, summary, input, [data-island], .not-prose')) e.preventDefault();
           }}
         >
           <div className="flex items-center justify-between gap-3">
-            <strong className="text-lg font-semibold tracking-tight">{hit?.value}</strong>
+            {single ? (
+              <strong className="text-lg font-semibold tracking-tight">{hit?.value}</strong>
+            ) : (
+              <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{hit?.value}</p>
+            )}
             <PlayButton
-              state={wordState}
+              state={playState}
               label="Play"
               className={cn(
                 'inline-flex size-9 items-center justify-center rounded-full border transition-colors hover:bg-accent',
-                wordState !== 'idle' && 'border-brand text-brand',
+                'shrink-0',
+                playState !== 'idle' && 'border-brand text-brand',
               )}
-              onClick={() => hit && play({ text: hit.value, owner: wordOwner.current, onState: setWordState, onError: setWordError })}
+              onClick={() => hit && play({ text: hit.value, owner: owner.current, onState: setPlayState, onError: setError })}
             />
           </div>
           {sound && <p className="mt-1 font-mono text-sm text-muted-foreground">/{sound}/</p>}
           {hit?.gloss && <p className="mt-2 text-sm">{hit.gloss}</p>}
-          {wordError && <p className="mt-2 text-sm text-destructive">{wordError}</p>}
+          {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
           <button
             type="button"
             className="mt-3 text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             onClick={() => {
+              current.current = undefined;
               setHit(undefined);
               setSettingsOpen(true);
             }}
@@ -246,11 +247,6 @@ export default function Speech({ ipa }: { ipa: Record<string, string> }) {
         </DialogContent>
       </Dialog>
 
-      {toast && (
-        <p role="status" className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg border bg-popover px-4 py-2.5 text-sm shadow-md animate-in fade-in-0 slide-in-from-bottom-2">
-          {toast}
-        </p>
-      )}
     </>
   );
 }
