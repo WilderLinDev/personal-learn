@@ -20,5 +20,5 @@ eslint.config.js
 .prettierrc.json
 .prettierignore
 vitest.config.ts
-pyproject.toml
+ruff.toml
 .github
