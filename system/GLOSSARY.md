@@ -17,6 +17,10 @@ The public repository containing the System and an empty Vault, with no learner 
 One learner's repository: the System plus a populated Vault.
 _Avoid_: Fork
 
+**Site**:
+The published lessons and reference documents of an Instance, with an index.
+_Avoid_: Website, blog
+
 ## Learning
 
 **North star**:

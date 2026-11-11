@@ -14,3 +14,4 @@
 - Repository: …
 - Auto-commit to the default branch: yes / no
 - Vault visibility: public / private
+- Site: … (optional)

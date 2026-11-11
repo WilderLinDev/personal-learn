@@ -8,3 +8,4 @@ LICENSE
 .agents
 .claude
 system
+wrangler.jsonc
