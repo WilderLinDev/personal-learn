@@ -9,11 +9,13 @@
 
 --today YYYY-MM-DD overrides today's date (for testing).
 """
+
 import argparse
 import datetime as dt
 import json
 import os
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -89,11 +91,10 @@ def cmd_due(args, today):
     rows.sort(key=lambda r: (r[1], r[0], r[2]["id"]))
     if args.summary:
         if rows:
-            counts = {}
-            for _, topic, _ in rows:
-                counts[topic] = counts.get(topic, 0) + 1
+            counts = Counter(topic for _, topic, _ in rows)
             detail = ", ".join(f"{t} {n}" for t, n in counts.items())
-            print(f"Review: {len(rows)} items due today ({detail}). Offer a review session at the start of this conversation.")
+            print(f"Review: {len(rows)} items due today ({detail}). ", end="")
+            print("Offer a review session at the start of this conversation.")
         return
     for _, topic, i in rows[: args.limit]:
         print(f"{i['id']}\t{topic}\t{i['kind']}\t{i['question']}")
@@ -157,14 +158,27 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--today", default=dt.date.today().isoformat())
     sub = p.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("due"); s.add_argument("--limit", type=int, default=10)
-    s.add_argument("--summary", action="store_true"); s.set_defaults(f=cmd_due)
-    s = sub.add_parser("answer"); s.add_argument("id"); s.set_defaults(f=cmd_answer)
-    s = sub.add_parser("grade"); s.add_argument("id"); s.add_argument("grade", choices=GRADES)
-    s.add_argument("confidence", choices=CONFIDENCE); s.set_defaults(f=cmd_grade)
-    s = sub.add_parser("add"); s.add_argument("topic"); s.add_argument("kind", choices=KINDS)
-    s.add_argument("question"); s.add_argument("answer"); s.add_argument("--source"); s.set_defaults(f=cmd_add)
-    s = sub.add_parser("stats"); s.set_defaults(f=cmd_stats)
+    s = sub.add_parser("due")
+    s.add_argument("--limit", type=int, default=10)
+    s.add_argument("--summary", action="store_true")
+    s.set_defaults(f=cmd_due)
+    s = sub.add_parser("answer")
+    s.add_argument("id")
+    s.set_defaults(f=cmd_answer)
+    s = sub.add_parser("grade")
+    s.add_argument("id")
+    s.add_argument("grade", choices=GRADES)
+    s.add_argument("confidence", choices=CONFIDENCE)
+    s.set_defaults(f=cmd_grade)
+    s = sub.add_parser("add")
+    s.add_argument("topic")
+    s.add_argument("kind", choices=KINDS)
+    s.add_argument("question")
+    s.add_argument("answer")
+    s.add_argument("--source")
+    s.set_defaults(f=cmd_add)
+    s = sub.add_parser("stats")
+    s.set_defaults(f=cmd_stats)
     args = p.parse_args()
     dt.date.fromisoformat(args.today)
     args.f(args, args.today)
