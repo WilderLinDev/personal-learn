@@ -10,3 +10,4 @@ Build a broad, connected understanding of the world while improving reasoning, j
 - Read and write clear, natural English about these subjects, with growing complexity.
 
 ## Topics
+- [US political system](topics/us-political-system/MISSION.md) — understand who has authority at federal, state and local levels, and interpret political news without confusing institutions, parties and public opinion.
