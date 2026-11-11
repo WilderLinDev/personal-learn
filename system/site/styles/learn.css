@@ -454,6 +454,8 @@ main > section > .section-label { margin-bottom: 1rem; }
   font: 0.9rem var(--mono);
 }
 .say-dialog input:focus { outline: none; border-color: var(--accent-ink); }
+.say-legacy { margin: 0 0 0.8rem; }
+.say-legacy summary { cursor: pointer; margin-bottom: 0.7rem; font-size: 0.78rem; color: var(--muted); }
 .say-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; margin-top: 1.2rem; }
 .say-actions button {
   padding: 0.45rem 0.85rem;

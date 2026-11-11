@@ -23,9 +23,13 @@ const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="tr
 <dialog class="say-dialog" data-say-dialog>
   <form method="dialog">
     <h2>Voice</h2>
-    <p>Pronunciation uses Volcano Engine TTS with your own App ID and Access Token. They are kept only in this browser and sent only to Volcano Engine.</p>
-    <label>App ID<input name="appId" autocomplete="off" spellcheck="false"></label>
-    <label>Access Token<input name="token" type="password" autocomplete="off"></label>
+    <p>Pronunciation uses Volcano Engine TTS 2.0 with your own credentials. They are kept only in this browser and sent only to Volcano Engine.</p>
+    <label>API Key<input name="apiKey" type="password" autocomplete="off" spellcheck="false"></label>
+    <details class="say-legacy">
+      <summary>Use App ID and Access Token instead</summary>
+      <label>App ID<input name="appId" autocomplete="off" spellcheck="false"></label>
+      <label>Access Token<input name="token" type="password" autocomplete="off"></label>
+    </details>
     <label>Voice<input name="voice" autocomplete="off" spellcheck="false"></label>
     <div class="say-actions">
       <button value="system" type="submit">Use system voice</button>
@@ -41,7 +45,7 @@ const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="tr
   const ENDPOINT = 'https://openspeech.bytedance.com/api/v3/tts/unidirectional';
   const DEFAULT_VOICE = 'en_male_tim_uranus_bigtts';
   const STORE = 'learn.voice';
-  type Settings = { mode: 'volcano' | 'system'; appId?: string; token?: string; voice?: string };
+  type Settings = { mode: 'volcano' | 'system'; apiKey?: string; appId?: string; token?: string; voice?: string };
 
   const ipa: Record<string, string> = JSON.parse(document.getElementById('ipa-data')?.textContent || '{}');
   const prose = document.querySelector<HTMLElement>('.prose');
@@ -77,12 +81,14 @@ const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="tr
     text.replace(/[（(][^）)]*[㐀-鿿][^）)]*[）)]/g, '').replace(/[㐀-鿿　-〿＀-￯]+/g, ' ').replace(/\s+/g, ' ').trim();
 
   async function volcano(text: string, s: Settings) {
-    const res = await fetch(ENDPOINT, {
+    // Browsers may not send X-Api-Key across origins; Volcano also reads the API Key from ?api_key=.
+    const auth: Record<string, string> = s.apiKey ? {} : { 'X-Api-App-Key': s.appId!, 'X-Api-Access-Key': s.token! };
+    const url = s.apiKey ? `${ENDPOINT}?api_key=${encodeURIComponent(s.apiKey)}` : ENDPOINT;
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Api-App-Key': s.appId!,
-        'X-Api-Access-Key': s.token!,
+        ...auth,
         'X-Api-Resource-Id': 'seed-tts-2.0',
         'X-Api-Request-Id': crypto.randomUUID(),
       },
@@ -102,7 +108,7 @@ const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="tr
       let msg: { code?: number; message?: string; data?: string; header?: { code?: number; message?: string } };
       try { msg = JSON.parse(line); } catch { continue; }
       const code = msg.code ?? msg.header?.code;
-      if (res.status === 401 || res.status === 403) throw new Error('check your App ID and Access Token in Voice settings.');
+      if (res.status === 401 || res.status === 403) throw new Error('check your credentials in Voice settings.');
       if (code && code !== 20000000) throw new Error(msg.message || msg.header?.message || `error ${code}`);
       if (msg.data) chunks.push(Uint8Array.from(atob(msg.data), (c) => c.charCodeAt(0)));
     }
@@ -163,16 +169,21 @@ const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="tr
   function openSettings() {
     const s = load();
     const form = dialog.querySelector('form')!;
+    (form.elements.namedItem('apiKey') as HTMLInputElement).value = s?.apiKey ?? '';
     (form.elements.namedItem('appId') as HTMLInputElement).value = s?.appId ?? '';
     (form.elements.namedItem('token') as HTMLInputElement).value = s?.token ?? '';
     (form.elements.namedItem('voice') as HTMLInputElement).value = s?.voice ?? DEFAULT_VOICE;
+    dialog.querySelector<HTMLDetailsElement>('.say-legacy')!.open = Boolean(s?.appId && !s?.apiKey);
     dialog.showModal();
   }
   dialog.addEventListener('close', () => {
     const form = dialog.querySelector('form')!;
     const value = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value.trim();
-    if (dialog.returnValue === 'save' && value('appId') && value('token')) {
-      store({ mode: 'volcano', appId: value('appId'), token: value('token'), voice: value('voice') || DEFAULT_VOICE });
+    const voice = value('voice') || DEFAULT_VOICE;
+    if (dialog.returnValue === 'save' && value('apiKey')) {
+      store({ mode: 'volcano', apiKey: value('apiKey'), voice });
+    } else if (dialog.returnValue === 'save' && value('appId') && value('token')) {
+      store({ mode: 'volcano', appId: value('appId'), token: value('token'), voice });
     } else if (dialog.returnValue === 'system') {
       store({ mode: 'system' });
     } else if (dialog.returnValue === 'clear') {

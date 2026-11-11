@@ -64,7 +64,7 @@ Every lesson and reference document has it; authors add nothing.
 
 - Tap a word: its General American IPA (CMU Pronouncing Dictionary), its gloss if one follows it, and a play button.
 - Each paragraph has a play button. Native-language glosses are not read aloud.
-- Speech comes from Volcano Engine TTS (`seed-tts-2.0`), called directly from the browser with the reader's own App ID and Access Token, asked for on first use and kept only in that browser's `localStorage`. The reader can choose the system voice instead. Audio is not cached.
+- Speech comes from Volcano Engine TTS (`seed-tts-2.0`), called directly from the browser with the reader's own API Key (or App ID and Access Token), asked for on first use and kept only in that browser's `localStorage`. The reader can choose the system voice instead. Audio is not cached.
 
 ## Commands
 
