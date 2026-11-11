@@ -1,14 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { loadSite, parseGlossary } from '../lib/site';
+import { loadSite } from '../lib/site';
 
 const site = await loadSite();
-const glossaries = await getCollection('glossaries');
 const topics = site.topics
-  .map((t) => ({ topic: t, groups: parseGlossary(glossaries.find((g) => g.id.split('/')[0] === t.slug)?.body ?? '') }))
-  .filter((t) => t.groups.length > 0);
+  .map((topic) => ({ topic, groups: site.glossary(topic.slug) }))
+  .filter((t) => t.groups.length);
 ---
+
 <Base title="Glossary" nav="glossary">
   <main id="main" class="mx-auto max-w-3xl px-4 pt-12 sm:px-6 sm:pt-16">
     <h1 class="text-4xl font-semibold tracking-tight">Glossary</h1>
@@ -18,11 +17,18 @@ const topics = site.topics
       <>
         <input
           class="mt-8 h-11 w-full rounded-lg border border-input bg-transparent px-4 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          type="search" placeholder="Search terms" aria-label="Search terms" data-glossary-search
+          type="search"
+          placeholder="Search terms"
+          aria-label="Search terms"
+          data-glossary-search
         />
         {topics.map(({ topic, groups }) => (
           <section class="mt-12" data-glossary-topic>
-            <h2 class="text-xs font-semibold tracking-wider text-muted-foreground uppercase"><a class="hover:text-brand" href={`/topics/${topic.slug}/`}>{topic.title}</a></h2>
+            <h2 class="eyebrow">
+              <a class="hover:text-brand" href={`/topics/${topic.slug}/`}>
+                {topic.title}
+              </a>
+            </h2>
             {groups.map((g) => (
               <>
                 {g.group && <h3 class="mt-6 text-sm font-semibold">{g.group}</h3>}
@@ -41,26 +47,29 @@ const topics = site.topics
             ))}
           </section>
         ))}
-        <p class="mt-8 text-muted-foreground" data-glossary-empty hidden>No matching terms.</p>
+        <p class="mt-8 text-muted-foreground" data-glossary-empty hidden>
+          No matching terms.
+        </p>
       </>
     )}
   </main>
   <script>
     const input = document.querySelector<HTMLInputElement>('[data-glossary-search]');
+    const empty = document.querySelector<HTMLElement>('[data-glossary-empty]');
     input?.addEventListener('input', () => {
-      const q = input.value.trim().toLowerCase();
+      const query = input.value.trim().toLowerCase();
       let shown = 0;
-      document.querySelectorAll<HTMLElement>('[data-glossary-topic]').forEach((section) => {
+      for (const section of document.querySelectorAll<HTMLElement>('[data-glossary-topic]')) {
         let any = false;
-        section.querySelectorAll<HTMLElement>('[data-glossary-term]').forEach((term) => {
-          const hit = !q || term.textContent!.toLowerCase().includes(q);
+        for (const term of section.querySelectorAll<HTMLElement>('[data-glossary-term]')) {
+          const hit = !query || (term.textContent ?? '').toLowerCase().includes(query);
           term.hidden = !hit;
           any ||= hit;
           if (hit) shown++;
-        });
+        }
         section.hidden = !any;
-      });
-      document.querySelector<HTMLElement>('[data-glossary-empty]')!.hidden = shown > 0;
+      }
+      if (empty) empty.hidden = shown > 0;
     });
   </script>
 </Base>

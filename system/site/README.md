@@ -122,7 +122,7 @@ The President; Congress can override with two thirds of each chamber.
 
 ### Simulation
 
-A Topic's own interactive piece, for what no Component can show, such as a payoff explorer. Write one only with a shell, and run `npm run build` before saving.
+A Topic's own interactive piece, for what no Component can show, such as a payoff explorer. Write one only with a shell, and run `pnpm lint`, `pnpm check`, and `pnpm build` before saving.
 
 - File: `vault/topics/<topic>/simulations/<name>.tsx`, `<name>` in lowercase letters, digits, and hyphens; it default-exports a React component with no props.
 - Build it from the Design: Tailwind classes with the theme colours (`bg-card`, `text-muted-foreground`, `border`, `text-brand`, `bg-tint`) and the primitives in `@/components/ui/`. No colours, fonts, or global styles of its own.
@@ -139,20 +139,25 @@ Every lesson and reference document has it; authors add nothing.
 ## Look
 
 - Light and dark: follows the system until the reader picks one in the header; the pick is kept in that browser.
-- Fonts: Inter for text, JetBrains Mono for code, Kalam in diagrams, Excalidraw's own fonts in its canvas (served from `/excalidraw/fonts/`); Chinese uses the system font.
+- Fonts: Inter for text, JetBrains Mono for code, Kalam in diagrams, all served with the Site through Astro's Fonts API (`astro.config.ts`). Excalidraw's canvas loads its hand-drawn font from Excalidraw's CDN when a reader opens it. Chinese uses the system font.
 - The Theme (`vault/theme.css`) sets only `--accent`; dark mode derives a lighter shade from it.
 
 ## Code
 
-- `markdown.mjs` turns Components into HTML. Interactive ones become `data-island` elements that `islands/mount.tsx` mounts as React components when they scroll near the viewport.
-- `components/ui/` holds shadcn/ui primitives; add more with `npx shadcn@latest add <name>`.
+- `markdown.ts` turns Components into HTML. Interactive ones become `data-island` elements that `islands/mount.tsx` mounts as React components when they scroll near the viewport.
+- `components/ui/` holds shadcn/ui primitives; add more with `pnpm dlx shadcn@latest add <name>`. Class names merge with shadcn's `cn` package.
+- `lib/site.ts` loads lessons and reference documents from the content collections; `lib/topic-files.ts` reads a Topic's `MISSION.md` and `GLOSSARY.md` in Teach's formats.
 - `styles/global.css` is the Design: theme tokens and the styles of every Component.
+- Tests sit next to the code they cover, as `*.test.ts`.
 
 ## Commands
 
 ```bash
-npm install
-npm run dev     # preview at http://localhost:4321
-npm run build   # build into dist/; fails on any rule above
-npm run check   # type-check
+pnpm install
+pnpm dev            # preview at http://localhost:4321
+pnpm build          # build into dist/; fails on any rule above
+pnpm check          # type-check
+pnpm lint           # ESLint
+pnpm format         # Prettier; CI runs pnpm format:check
+pnpm test           # Vitest: Components, Teach files, pronunciation
 ```

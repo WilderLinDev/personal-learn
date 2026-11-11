@@ -1,21 +1,18 @@
-// Light or dark: follows the system until the reader picks one; the pick is kept in this browser.
-import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { setDark, useDark } from '@/lib/theme';
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => setDark(document.documentElement.classList.contains('dark')), []);
-  const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle('dark', next);
-    try {
-      localStorage.setItem('learn.theme', next ? 'dark' : 'light');
-    } catch {}
-  };
+  const dark = useDark();
   return (
-    <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label={dark ? 'Use light theme' : 'Use dark theme'}>
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      onClick={() => {
+        setDark(!dark);
+      }}
+      aria-label={dark ? 'Use light theme' : 'Use dark theme'}
+    >
       {dark ? <Sun /> : <Moon />}
     </Button>
   );

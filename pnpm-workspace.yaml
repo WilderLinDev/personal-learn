@@ -1,0 +1,14 @@
+minimumReleaseAgeExclude:
+  - '@astrojs/internal-helpers@0.13.2'
+  - '@astrojs/markdown-remark@7.3.7'
+  - '@astrojs/markdown-satteri@0.4.8'
+  - '@astrojs/react-renderer@0.1.1'
+  - '@astrojs/react@7.1.7'
+  - '@astrojs/runtime@0.1.0'
+  - '@astrojs/vite-plugin-astro@0.1.1'
+  - '@lucide/astro@1.72.0'
+  - astro@7.4.10
+  - lucide-react@1.72.0
+allowBuilds:
+  esbuild: true
+  workerd: true

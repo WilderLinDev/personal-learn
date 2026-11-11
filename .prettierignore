@@ -1,0 +1,6 @@
+# Prose follows the authoring rules, not a formatter; Teach stays verbatim.
+**/*.md
+pnpm-lock.yaml
+# The Vault is the learner's data, except Simulations, which are code.
+vault/**/*.*
+!vault/topics/*/simulations/*.tsx

@@ -1,12 +1,10 @@
 // A Diagram: Mermaid source drawn in the hand-drawn look, in the Design's colours.
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { PencilLine } from 'lucide-react';
+import { useDark } from '@/lib/theme';
 
 // Excalidraw is large: load it only when a reader opens a diagram.
-const DiagramCanvas = lazy(() => {
-  (window as Window & { EXCALIDRAW_ASSET_PATH?: string }).EXCALIDRAW_ASSET_PATH = '/excalidraw/';
-  return import('./DiagramCanvas');
-});
+const DiagramCanvas = lazy(() => import('./DiagramCanvas'));
 
 // Mermaid only understands hex and rgb; resolve any CSS colour (oklch, color-mix) through a canvas.
 function hex(variable: string) {
@@ -15,21 +13,12 @@ function hex(variable: string) {
   document.body.append(probe);
   const color = getComputedStyle(probe).color;
   probe.remove();
-  const ctx = document.createElement('canvas').getContext('2d')!;
+  const ctx = document.createElement('canvas').getContext('2d');
+  if (!ctx) return color;
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, 1, 1);
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-  return `#${[r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')}`;
-}
-
-function useDark() {
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'));
-  useEffect(() => {
-    const observer = new MutationObserver(() => setDark(document.documentElement.classList.contains('dark')));
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-  return dark;
+  const rgb = ctx.getImageData(0, 0, 1, 1).data.slice(0, 3);
+  return `#${Array.from(rgb, (n) => n.toString(16).padStart(2, '0')).join('')}`;
 }
 
 // Show the diagram at its natural size, shrinking to at most 80% before the frame scrolls,
@@ -41,10 +30,13 @@ function fit(svg: string) {
   if (width) {
     root.setAttribute('width', '100%');
     root.removeAttribute('height');
-    root.setAttribute('style', `max-width:${width}px;min-width:${Math.round(width * 0.8)}px`);
+    root.setAttribute('style', `max-width:${String(width)}px;min-width:${String(Math.round(width * 0.8))}px`);
   }
   return new XMLSerializer().serializeToString(root);
 }
+
+// The hand-drawn font, as Astro's Fonts API names it (astro.config.ts).
+const handFont = () => getComputedStyle(document.documentElement).getPropertyValue('--font-kalam').trim();
 
 let queue = Promise.resolve();
 
@@ -60,7 +52,8 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
     // Mermaid renders one diagram at a time.
     queue = queue.then(async () => {
       try {
-        const [{ default: mermaid }] = await Promise.all([import('mermaid'), document.fonts.load('16px Kalam')]);
+        const font = handFont();
+        const [{ default: mermaid }] = await Promise.all([import('mermaid'), document.fonts.load(`16px ${font}`)]);
         const brand = hex('--brand');
         const fg = hex('--foreground');
         const bg = hex('--card');
@@ -69,7 +62,7 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
           securityLevel: 'strict',
           look: 'handDrawn',
           theme: 'base',
-          fontFamily: 'Kalam, "PingFang SC", cursive',
+          fontFamily: font,
           themeVariables: {
             darkMode: dark,
             background: bg,
@@ -99,7 +92,7 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
           setError(undefined);
         }
       } catch (e) {
-        if (!cancelled) setError((e as Error).message);
+        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
       }
     });
     return () => {
@@ -120,7 +113,9 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+        }}
         className="group relative flex w-full cursor-zoom-in justify-center-safe rounded-lg focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
         aria-label={`Open diagram${caption ? `: ${caption}` : ''} to zoom and draw`}
       >
@@ -132,7 +127,13 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
       </button>
       {open && (
         <Suspense fallback={<div className="fixed inset-0 z-50 animate-pulse bg-background/80" />}>
-          <DiagramCanvas code={code} caption={caption} onClose={() => setOpen(false)} />
+          <DiagramCanvas
+            code={code}
+            caption={caption}
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
         </Suspense>
       )}
     </>

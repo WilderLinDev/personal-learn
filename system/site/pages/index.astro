@@ -3,23 +3,29 @@ import { ArrowRight } from '@lucide/astro';
 import Base from '../layouts/Base.astro';
 import Timeline from '../components/Timeline.astro';
 import TopicCards from '../components/TopicCards.astro';
-import { kindLabel, loadSite } from '../lib/site';
+import { kindLabel, loadSite, type Lesson } from '../lib/site';
 
 const site = await loadSite();
-const latest = site.timeline.find((p) => p.kind === 'lessons');
+const latest = site.timeline.find((p): p is Lesson => p.kind === 'lessons');
 const latestTopic = latest && site.topic(latest.topic);
 const recent = site.timeline.slice(0, 10);
-const label = 'text-xs font-semibold tracking-wider text-muted-foreground uppercase';
 ---
+
 <Base title="Learning" nav="home">
   <main id="main" class="mx-auto grid max-w-5xl gap-16 px-4 pt-12 sm:px-6 sm:pt-16">
     {latest ? (
-      <a href={latest.url} class="group relative overflow-hidden rounded-2xl border bg-tint p-6 transition-colors hover:border-brand/40 sm:p-10">
+      <a
+        href={latest.url}
+        class="group relative overflow-hidden rounded-2xl border bg-tint p-6 transition-colors hover:border-brand/40 sm:p-10"
+      >
         <span class="text-xs font-semibold tracking-wider text-brand uppercase">Continue</span>
-        <strong class="mt-3 block text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{latest.title}</strong>
-        <span class="mt-3 block max-w-2xl text-pretty text-muted-foreground">{latest.lead}</span>
+        <strong class="mt-3 block text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+          {latest.data.title}
+        </strong>
+        <span class="mt-3 block max-w-2xl text-pretty text-muted-foreground">{latest.data.lead}</span>
         <span class="mt-6 flex items-center gap-2 text-sm font-medium">
-          {latestTopic?.title} · {kindLabel(latest)}{latest.minutes && ` · ${latest.minutes} min`}
+          {latestTopic?.title} · {kindLabel(latest)}
+          {latest.data.minutes && ` · ${String(latest.data.minutes)} min`}
           <ArrowRight class="size-4 text-brand transition-transform group-hover:translate-x-1" />
         </span>
       </a>
@@ -32,16 +38,25 @@ const label = 'text-xs font-semibold tracking-wider text-muted-foreground upperc
     <div class="grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-12">
       {site.topics.length > 0 && (
         <section>
-          <h2 class={label}>Topics</h2>
-          <div class="mt-4"><TopicCards topics={site.topics} /></div>
+          <h2 class="eyebrow">Topics</h2>
+          <div class="mt-4">
+            <TopicCards topics={site.topics} />
+          </div>
         </section>
       )}
       {recent.length > 0 && (
         <section>
-          <h2 class={label}>Recent</h2>
-          <div class="mt-5"><Timeline pages={recent} topics={site.topics} /></div>
+          <h2 class="eyebrow">Recent</h2>
+          <div class="mt-5">
+            <Timeline pages={recent} topics={site.topics} />
+          </div>
           {site.timeline.length > recent.length && (
-            <a href="/timeline/" class="mt-6 inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline">Full timeline <ArrowRight class="size-4" /></a>
+            <a
+              href="/timeline/"
+              class="mt-6 inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
+            >
+              Full timeline <ArrowRight class="size-4" />
+            </a>
           )}
         </section>
       )}

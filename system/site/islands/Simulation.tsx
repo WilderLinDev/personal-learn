@@ -1,11 +1,20 @@
 // A Topic's Simulation: vault/topics/<topic>/simulations/<name>.tsx, default-exporting a React component.
-import { lazy, Suspense, useMemo, type ComponentType } from 'react';
+import { lazy, Suspense, type ComponentType } from 'react';
 
-const modules = import.meta.glob<{ default: ComponentType }>('/vault/topics/*/simulations/*.tsx');
+const SIMULATIONS = Object.fromEntries(
+  Object.entries(import.meta.glob<{ default: ComponentType }>('/vault/topics/*/simulations/*.tsx')).map(
+    ([path, load]) => [path, lazy(load)],
+  ),
+);
 
-export default function Simulation({ topic, name, title }: { topic: string; name: string; title: string }) {
-  const load = modules[`/vault/topics/${topic}/simulations/${name}.tsx`];
-  const Component = useMemo(() => load && lazy(load), [load]);
+export interface SimulationProps {
+  topic: string;
+  name: string;
+  title: string;
+}
+
+export default function Simulation({ topic, name, title }: SimulationProps) {
+  const Component = SIMULATIONS[`/vault/topics/${topic}/simulations/${name}.tsx`];
   if (!Component) return <p className="text-sm text-destructive">Simulation “{name}” not found.</p>;
   return (
     <section aria-label={title}>

@@ -1,6 +1,6 @@
 // A Diagram opened in Excalidraw: pan, zoom, move shapes, and add notes. Notes are kept in this
 // browser only, per page and per diagram source; a changed diagram starts fresh.
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Excalidraw, convertToExcalidrawElements, restoreElements } from '@excalidraw/excalidraw';
 import type { ExcalidrawImperativeAPI, BinaryFiles } from '@excalidraw/excalidraw/types';
@@ -9,20 +9,25 @@ import { parseMermaidToExcalidraw } from '@excalidraw/mermaid-to-excalidraw';
 import { RotateCcw, X } from 'lucide-react';
 import '@excalidraw/excalidraw/index.css';
 import { Button } from '@/components/ui/button';
+import { useDark } from '@/lib/theme';
 
-type Scene = { elements: readonly ExcalidrawElement[]; files: BinaryFiles };
+interface Scene {
+  elements: readonly ExcalidrawElement[];
+  files: BinaryFiles;
+}
 
-function hash(text: string) {
-  let h = 5381;
-  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
-  return (h >>> 0).toString(36);
+/** Where this page's notes on this diagram source are kept. */
+async function storageKey(code: string) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code));
+  return `learn.diagram:${location.pathname}:${new Uint8Array(digest).slice(0, 8).toHex()}`;
 }
 
 const version = (elements: readonly ExcalidrawElement[]) => elements.reduce((n, e) => n + e.version, 0);
 
 function read(key: string): Scene | null {
   try {
-    return JSON.parse(localStorage.getItem(key) || 'null');
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as Scene) : null;
   } catch {
     return null;
   }
@@ -50,34 +55,45 @@ async function original(code: string): Promise<Scene> {
   const { elements, files } = await parseMermaidToExcalidraw(code, { themeVariables: { fontSize: '20px' } });
   const converted = convertToExcalidrawElements(elements, { regenerateIds: false });
   // Re-measure text with Excalifont, which the conversion may have measured with a fallback font.
-  return { elements: restoreElements(converted, null, { refreshDimensions: true, repairBindings: true }), files: files ?? {} };
+  return {
+    elements: restoreElements(converted, null, { refreshDimensions: true, repairBindings: true }),
+    files: files ?? {},
+  };
 }
 
-export default function DiagramCanvas({ code, caption, onClose }: { code: string; caption: string; onClose: () => void }) {
-  const key = useMemo(() => `learn.diagram:${location.pathname}:${hash(code)}`, [code]);
+export default function DiagramCanvas({
+  code,
+  caption,
+  onClose,
+}: {
+  code: string;
+  caption: string;
+  onClose: () => void;
+}) {
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [generation, setGeneration] = useState(0);
   const [edited, setEdited] = useState(false);
   const [error, setError] = useState('');
   const api = useRef<ExcalidrawImperativeAPI | null>(null);
+  const key = useRef('');
   const saved = useRef(0);
   // Changes count as notes only after the diagram itself is on the canvas.
   const live = useRef(false);
-  const dark = document.documentElement.classList.contains('dark');
-  const close = useRef(onClose);
-  close.current = onClose;
+  const dark = useDark();
+  const close = useEffectEvent(onClose);
 
   // Text is measured when elements are created, so convert only once Excalidraw's own font has loaded.
   useEffect(() => {
     if (!ready) return;
-    let cancelled = false;
-    (async () => {
+    const controller = new AbortController();
+    void (async () => {
       try {
         await excalifont(code);
-        const notes = read(key);
+        key.current = await storageKey(code);
+        const notes = read(key.current);
         const scene = notes ?? (await original(code));
-        if (cancelled || !api.current) return;
+        if (controller.signal.aborted || !api.current) return;
         saved.current = version(scene.elements);
         live.current = true;
         api.current.addFiles(Object.values(scene.files));
@@ -86,13 +102,13 @@ export default function DiagramCanvas({ code, caption, onClose }: { code: string
         setEdited(Boolean(notes));
         setLoading(false);
       } catch (e) {
-        if (!cancelled) setError((e as Error).message);
+        if (!controller.signal.aborted) setError(e instanceof Error ? e.message : String(e));
       }
     })();
     return () => {
-      cancelled = true;
+      controller.abort();
     };
-  }, [ready, code, key, generation]);
+  }, [ready, code, generation]);
 
   useEffect(() => {
     const overflow = document.body.style.overflow;
@@ -101,8 +117,14 @@ export default function DiagramCanvas({ code, caption, onClose }: { code: string
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
       const state = api.current?.getAppState();
-      if (state && (state.editingTextElement || Object.keys(state.selectedElementIds).length || state.activeTool.type !== 'selection')) return;
-      close.current();
+      if (
+        state &&
+        (state.editingTextElement ||
+          Object.keys(state.selectedElementIds).length ||
+          state.activeTool.type !== 'selection')
+      )
+        return;
+      close();
     };
     window.addEventListener('keydown', onKey);
     return () => {
@@ -115,14 +137,14 @@ export default function DiagramCanvas({ code, caption, onClose }: { code: string
     const v = version(elements);
     if (!live.current || v === saved.current) return;
     saved.current = v;
-    write(key, { elements: elements.filter((e) => !e.isDeleted), files });
+    write(key.current, { elements: elements.filter((e) => !e.isDeleted), files });
     setEdited(true);
   };
 
   // Back to the diagram as written: forget the notes and remount the canvas.
   const reset = () => {
     live.current = false;
-    write(key, null);
+    write(key.current, null);
     setEdited(false);
     setLoading(true);
     setReady(false);
@@ -130,10 +152,17 @@ export default function DiagramCanvas({ code, caption, onClose }: { code: string
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex flex-col bg-background" role="dialog" aria-modal="true" aria-label={caption || 'Diagram'}>
+    <div
+      className="fixed inset-0 z-50 flex flex-col bg-background"
+      role="dialog"
+      aria-modal="true"
+      aria-label={caption || 'Diagram'}
+    >
       <header className="flex h-12 shrink-0 items-center gap-3 border-b px-3 sm:px-4">
         <strong className="truncate text-sm font-semibold">{caption || 'Diagram'}</strong>
-        <span className="hidden truncate text-xs text-muted-foreground sm:inline">Draw and add notes; they stay in this browser.</span>
+        <span className="hidden truncate text-xs text-muted-foreground sm:inline">
+          Draw and add notes; they stay in this browser.
+        </span>
         <span className="ml-auto flex items-center gap-1">
           {edited && (
             <Button variant="ghost" size="sm" onClick={reset}>
@@ -159,10 +188,14 @@ export default function DiagramCanvas({ code, caption, onClose }: { code: string
             }}
             onChange={onChange}
             theme={dark ? 'dark' : 'light'}
-            UIOptions={{ canvasActions: { loadScene: false, saveToActiveFile: false, clearCanvas: false, toggleTheme: false } }}
+            UIOptions={{
+              canvasActions: { loadScene: false, saveToActiveFile: false, clearCanvas: false, toggleTheme: false },
+            }}
           />
         )}
-        {loading && !error && <div className="pointer-events-none absolute inset-0 animate-pulse bg-muted/40" aria-label="Loading" />}
+        {loading && !error && (
+          <div className="pointer-events-none absolute inset-0 animate-pulse bg-muted/40" aria-label="Loading" />
+        )}
       </div>
     </div>,
     document.body,

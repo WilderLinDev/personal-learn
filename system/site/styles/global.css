@@ -51,10 +51,11 @@
 }
 
 @theme inline {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB',
-    'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
-  --font-hand: 'Kalam', 'Comic Sans MS', 'PingFang SC', cursive;
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+    'Microsoft YaHei', sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-hand: var(--font-kalam);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -83,6 +84,11 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* The small uppercase label above a section. */
+@utility eyebrow {
+  @apply text-xs font-semibold tracking-wider text-muted-foreground uppercase;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -92,7 +98,7 @@
     scroll-padding-top: 5rem;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
     font-feature-settings: 'cv11', 'ss01';
     text-rendering: optimizeLegibility;
   }
@@ -158,7 +164,7 @@
     @apply rounded-lg border text-sm;
   }
   .prose :where(blockquote) {
-    @apply border-l-2 font-normal not-italic text-muted-foreground;
+    @apply border-l-2 font-normal text-muted-foreground not-italic;
   }
   .prose :where(blockquote p)::before,
   .prose :where(blockquote p)::after {
