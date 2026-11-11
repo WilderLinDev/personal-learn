@@ -1,6 +1,6 @@
 // Pronunciation for every lesson and reference document: tap a word for its US IPA, gloss, and
 // sound; select any text to hear it. Playback: lib/speech.ts.
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { Loader2, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -138,9 +138,9 @@ export default function Speech({ ipa }: { ipa: Record<string, string> }) {
     if (r && loadSettings()) play(r);
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     event.preventDefault();
-    const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+    const submitter = event.nativeEvent.submitter as HTMLButtonElement | null;
     const form = new FormData(event.currentTarget);
     const value = (name: string) => String(form.get(name) ?? '').trim();
     const voice = value('voice') || DEFAULT_VOICE;

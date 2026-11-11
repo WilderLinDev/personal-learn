@@ -11,6 +11,8 @@
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.7",
     "@astrojs/react": "^7.1.7",
+    "@excalidraw/excalidraw": "^0.18.1",
+    "@excalidraw/mermaid-to-excalidraw": "^3.6.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource/kalam": "^5.3.0",

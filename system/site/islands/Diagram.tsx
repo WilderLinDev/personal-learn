@@ -1,7 +1,12 @@
 // A Diagram: Mermaid source drawn in the hand-drawn look, in the Design's colours.
-import { useEffect, useId, useState } from 'react';
-import { Maximize2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { PencilLine } from 'lucide-react';
+
+// Excalidraw is large: load it only when a reader opens a diagram.
+const DiagramCanvas = lazy(() => {
+  (window as Window & { EXCALIDRAW_ASSET_PATH?: string }).EXCALIDRAW_ASSET_PATH = '/excalidraw/';
+  return import('./DiagramCanvas');
+});
 
 // Mermaid only understands hex and rgb; resolve any CSS colour (oklch, color-mix) through a canvas.
 function hex(variable: string) {
@@ -48,6 +53,7 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
   const dark = useDark();
   const [svg, setSvg] = useState<string>();
   const [error, setError] = useState<string>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,25 +117,24 @@ export default function Diagram({ code, caption }: { code: string; caption: stri
   }
   if (!svg) return <div className="h-40 w-full animate-pulse rounded-lg bg-muted" aria-label="Loading diagram" />;
   return (
-    <Dialog>
-      <DialogTrigger
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
         className="group relative flex w-full cursor-zoom-in justify-center-safe rounded-lg focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-        aria-label={`Enlarge diagram${caption ? `: ${caption}` : ''}`}
+        aria-label={`Open diagram${caption ? `: ${caption}` : ''} to zoom and draw`}
       >
         <span className="contents" dangerouslySetInnerHTML={{ __html: svg }} />
-        <span className="absolute top-0 right-0 flex size-8 items-center justify-center rounded-md border bg-background/90 text-muted-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
-          <Maximize2 className="size-4" />
+        <span className="absolute top-0 right-0 flex items-center gap-1.5 rounded-md border bg-background/90 px-2 py-1 text-xs text-muted-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
+          <PencilLine className="size-3.5" />
+          Open
         </span>
-      </DialogTrigger>
-      <DialogContent className="max-h-[92dvh] gap-3 overflow-auto p-4 sm:max-w-[min(96vw,1400px)] sm:p-6">
-        <DialogTitle className="pr-8 text-base">{caption || 'Diagram'}</DialogTitle>
-        <div
-          className="flex justify-center-safe overflow-auto [&_svg]:h-auto [&_svg]:max-h-[80dvh] [&_svg]:!max-w-full [&_svg]:!min-w-0"
-          role="img"
-          aria-label={caption || 'Diagram'}
-          dangerouslySetInnerHTML={{ __html: svg }}
-        />
-      </DialogContent>
-    </Dialog>
+      </button>
+      {open && (
+        <Suspense fallback={<div className="fixed inset-0 z-50 animate-pulse bg-background/80" />}>
+          <DiagramCanvas code={code} caption={caption} onClose={() => setOpen(false)} />
+        </Suspense>
+      )}
+    </>
   );
 }

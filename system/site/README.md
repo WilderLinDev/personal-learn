@@ -87,6 +87,8 @@ Tables are plain Markdown tables; they scroll on narrow screens.
 
 One [Mermaid](https://mermaid.js.org/intro/) code block: flowcharts, sequence, state, class, mindmap, timeline, and the other Mermaid types. The Site draws it in the reader's browser, hand-drawn, in the Design's colours, and redraws it in dark mode; do not set colours, themes, or `%%{init}%%` in the source.
 
+A reader can open any diagram in [Excalidraw](https://excalidraw.com) to zoom, move shapes, and draw notes. Notes stay in that reader's browser, per page and diagram, until they reset it or the diagram's source changes. Flowcharts, sequence, class, ER, and state diagrams, Gantt charts, quadrant charts, and timelines open as editable shapes; other types open as a picture to draw on.
+
 - Prefer top-down (`flowchart TD`) for more than four nodes: the column is narrow, and a wide diagram scrolls.
 - Keep labels short; quote labels with punctuation: `A["Bill (H.R.)"]`.
 - A diagram supports the text; the text still states every fact it shows.
@@ -137,7 +139,7 @@ Every lesson and reference document has it; authors add nothing.
 ## Look
 
 - Light and dark: follows the system until the reader picks one in the header; the pick is kept in that browser.
-- Fonts: Inter for text, JetBrains Mono for code, Kalam in diagrams; Chinese uses the system font.
+- Fonts: Inter for text, JetBrains Mono for code, Kalam in diagrams, Excalidraw's own fonts in its canvas (served from `/excalidraw/fonts/`); Chinese uses the system font.
 - The Theme (`vault/theme.css`) sets only `--accent`; dark mode derives a lighter shade from it.
 
 ## Code
