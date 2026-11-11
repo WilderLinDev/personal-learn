@@ -11,3 +11,4 @@ Build a broad, connected understanding of the world while improving reasoning, j
 
 ## Topics
 - [US political system](topics/us-political-system/MISSION.md) — understand who has authority at federal, state and local levels, and interpret political news without confusing institutions, parties and public opinion.
+- [US market basics](topics/us-market-basics/MISSION.md) — understand how stocks, funds, ETFs, indexes, options and retirement plans connect, and interpret basic US market commentary without confusing assets, benchmarks, accounts and contracts.

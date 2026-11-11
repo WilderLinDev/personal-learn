@@ -1,0 +1,71 @@
+{
+  "topic": "us-market-basics",
+  "items": [
+    {
+      "id": "us-market-basics-1",
+      "kind": "recall",
+      "question": "What is the difference between a primary-market sale and a secondary-market trade?",
+      "answer": "In the primary market, an issuer sells newly issued securities and receives the money. In the secondary market, investors trade existing securities with one another; the seller receives the money.",
+      "source": "lessons/0001-us-market-map.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    },
+    {
+      "id": "us-market-basics-2",
+      "kind": "term",
+      "question": "What is an ETF? Give its Simplified Chinese equivalent.",
+      "answer": "An exchange-traded fund: a pooled investment fund whose shares trade on an exchange during the trading day. Chinese: 交易所交易基金.",
+      "source": "lessons/0001-us-market-map.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    },
+    {
+      "id": "us-market-basics-3",
+      "kind": "apply",
+      "question": "A worker puts money into a 401(k) and buys an S&P 500 index fund. Identify the account, investment vehicle, benchmark and underlying assets.",
+      "answer": "The 401(k) is the retirement account or plan; the index fund is the investment vehicle; the S&P 500 is the benchmark; the underlying assets are shares of the companies held by the fund.",
+      "source": "lessons/0001-us-market-map.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    },
+    {
+      "id": "us-market-basics-4",
+      "kind": "term",
+      "question": "What right does a call option give its buyer? Give its Simplified Chinese equivalent.",
+      "answer": "The right, but not the obligation, to buy the underlying asset at the strike price under the contract's rules. Chinese: 看涨期权.",
+      "source": "lessons/0002-calls-and-puts.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    },
+    {
+      "id": "us-market-basics-5",
+      "kind": "term",
+      "question": "What right does a put option give its buyer? Give its Simplified Chinese equivalent.",
+      "answer": "The right, but not the obligation, to sell the underlying asset at the strike price under the contract's rules. Chinese: 看跌期权.",
+      "source": "lessons/0002-calls-and-puts.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    },
+    {
+      "id": "us-market-basics-6",
+      "kind": "why",
+      "question": "Why can a call-option buyer lose money even if the stock price rises?",
+      "answer": "The stock may not rise above the strike price plus the premium by expiration. A small rise can leave the option worth less than the premium paid; time and volatility also affect the option's price.",
+      "source": "lessons/0002-calls-and-puts.html",
+      "created": "2026-11-11",
+      "interval": 0,
+      "due": "2026-11-11",
+      "log": []
+    }
+  ]
+}
