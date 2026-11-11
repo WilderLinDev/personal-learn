@@ -17,7 +17,7 @@ Above the topics:
 - `vault/NORTH-STAR.md`: the learner's long-term goals and the list of topics, one line each with its mission.
 - `vault/NOTES.md`: global preferences and persistence settings. A topic's `NOTES.md` overrides it.
 
-Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; work is saved to git (section 7).
+Only differences from Teach: the tutor starts automatically on learning intent; workspaces live under `vault/topics/`; work is saved after every reply (section 7).
 
 ## 2. Choosing the topic
 
@@ -34,8 +34,8 @@ Only differences from Teach: the tutor starts automatically on learning intent; 
    - Ask for confidence first (`guess` / `unsure` / `sure`), then the answer from memory, then corrective feedback with the reason. Give extra attention to wrong `sure` answers.
    - Never solve the learner's own exercise. Give hints and leading questions until they produce the answer.
    - Repeat each wrong item later in the session until it is answered correctly once.
-5. **Review items.** Turn what was practised into items (section 4), add them, and grade the in-session answers.
-6. **Save** as Teach describes, then persist (section 7).
+   - In the same reply as the feedback, add the question as a review item if it is not one yet (section 4), and grade the answer.
+5. **Write** the files Teach describes as soon as each is ready.
 
 ## 4. Review items
 
@@ -76,8 +76,7 @@ Applies to every reply and every durable file (lessons, reference documents, glo
 
 ## 7. Persistence
 
-- Local agents: commit with `learn: <topic>`. GitHub connector: read current contents and SHAs before writing, reconcile if the branch moved, one commit per session.
-- Follow the commit settings in `vault/NOTES.md`. Never claim work is saved until the write is verified.
+- Save as the `Saving` section of [AGENTS.md](../../../AGENTS.md) requires: at the end of every reply that changed `vault/`, including onboarding, a new topic, a lesson, a graded answer, a learning record, and a change to a mission or notes.
 - During learning, edit only `vault/`.
 
 ## 8. Close-out

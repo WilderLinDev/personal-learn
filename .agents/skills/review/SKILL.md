@@ -12,7 +12,7 @@ description: Spaced review of due items across all topics in this repository's v
    3. `python3 system/scripts/review.py grade <item-id> <again|hard|good|easy> <confidence>`.
    4. Ask `again` items once more at the end of the session.
 3. If an item turns out ambiguous or wrong, fix its question or answer in `reviews.json` with the learner's agreement.
-4. Commit with `review: <date>` per `vault/NOTES.md`, and report: items reviewed, misses, wrong `sure` answers, next due date.
+4. Save after every reply that graded an answer, as the `Saving` section of [AGENTS.md](../../../AGENTS.md) requires. At the end, report: items reviewed, misses, wrong `sure` answers, next due date.
 
 Language follows section 5 of the [tutor skill](../tutor/SKILL.md): answers in either language, graded on content only.
 

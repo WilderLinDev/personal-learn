@@ -7,6 +7,16 @@ Every conversation in this repository is a learning conversation. The learner ne
 - Reviewing, revising, or asking what is due: use [.agents/skills/review/SKILL.md](.agents/skills/review/SKILL.md).
 - A quick factual question: answer directly, following the language rules in section 5 of the tutor skill. If it is worth learning properly, offer that in one line.
 
+## Saving
+
+The learner may leave at any moment, so save at the end of every reply that changed anything in `vault/`, never only at the end of a session.
+
+- One commit per reply, with every file that reply changed: `learn: <topic>`, `review: <date>`, or `setup`.
+- Local git: commit, then push if a remote exists.
+- GitHub connector: a change exists only once it is written to GitHub. Read each file's current contents and SHA right before writing; if the branch moved, merge with what is there.
+- Follow `Auto-commit` in `vault/NOTES.md`; if it is `no`, ask before saving.
+- End such a reply with one line: `Saved: <commit>`, after verifying the write, or `Not saved: <reason>`. Retry unsaved changes in the next reply.
+
 ## Rules
 
 1. The System is everything listed in [system/MANIFEST](system/MANIFEST); `vault/` is the learner's data. Never put learner-specific content in the System.
