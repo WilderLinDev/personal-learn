@@ -58,6 +58,14 @@ A component is a fenced block: `:::name[optional label]` … `:::`. An outer blo
 
 Tables are plain Markdown tables; they scroll on narrow screens.
 
+## Pronunciation
+
+Every lesson and reference document has it; authors add nothing.
+
+- Tap a word: its General American IPA (CMU Pronouncing Dictionary), its gloss if one follows it, and a play button.
+- Each paragraph has a play button. Native-language glosses are not read aloud.
+- Speech comes from Volcano Engine TTS (`seed-tts-2.0`), called directly from the browser with the reader's own App ID and Access Token, asked for on first use and kept only in that browser's `localStorage`. The reader can choose the system voice instead. Audio is not cached.
+
 ## Commands
 
 ```bash

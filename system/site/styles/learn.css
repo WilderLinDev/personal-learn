@@ -367,3 +367,103 @@ main > section > .section-label { margin-bottom: 1rem; }
   table, .key, .card, .stats, .check { break-inside: avoid; }
   a { color: inherit; text-decoration: none; }
 }
+
+/* Pronunciation */
+
+::highlight(say) { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.prose p, .prose li { cursor: text; }
+.say {
+  position: absolute;
+  z-index: 10;
+  width: max-content;
+  min-width: 11rem;
+  max-width: min(18rem, calc(100vw - 16px));
+  padding: 0.75rem 0.9rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+  font-family: var(--sans);
+}
+.say-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.say-head strong { font-size: 1.05rem; font-weight: 600; }
+.say p { margin: 0.2rem 0 0; font-size: 0.85rem; line-height: 1.45; }
+.say-ipa { color: var(--muted); font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Grande", var(--sans); }
+.say-error { color: var(--accent-ink); }
+.say p:empty { display: none; }
+.say-play, .say-para {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.say-play { flex: none; width: 2rem; height: 2rem; }
+.say-para { width: 1.45rem; height: 1.45rem; vertical-align: -0.2rem; opacity: 0.5; }
+.say-para svg { width: 12px; height: 12px; }
+.say-para:hover, .say-para:focus-visible { opacity: 1; }
+@media (hover: hover) {
+  .say-para { opacity: 0; transition: opacity 0.15s; }
+  .prose p:hover > .say-para, .prose li:hover > .say-para { opacity: 0.55; }
+}
+.is-playing { opacity: 1; background: var(--accent-ink); border-color: var(--accent-ink); color: var(--bg); }
+.is-loading { opacity: 1; animation: say-pulse 1s ease-in-out infinite; }
+@keyframes say-pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .is-loading { animation: none; } }
+.say-link { margin-top: 0.55rem; padding: 0; border: 0; background: none; color: var(--muted); font: 0.75rem var(--sans); cursor: pointer; }
+.say-link:hover { color: var(--accent-ink); }
+.say-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.2rem;
+  z-index: 20;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  background: var(--fg);
+  color: var(--bg);
+  font: 0.82rem/1.4 var(--sans);
+}
+.say-dialog {
+  width: min(24rem, calc(100vw - 2rem));
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+}
+.say-dialog::backdrop { background: rgb(0 0 0 / 0.35); }
+.say-dialog h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.say-dialog p { font-size: 0.82rem; line-height: 1.5; color: var(--muted); margin: 0 0 1rem; }
+.say-dialog label { display: block; margin-bottom: 0.8rem; font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+.say-dialog input {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 0.9rem var(--mono);
+}
+.say-dialog input:focus { outline: none; border-color: var(--accent-ink); }
+.say-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; margin-top: 1.2rem; }
+.say-actions button {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 0.82rem var(--sans);
+  cursor: pointer;
+}
+.say-actions button[value="clear"] { margin-right: auto; }
+.say-actions .primary { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--bg); }
+@media print { .say, .say-para, .say-toast { display: none !important; } }

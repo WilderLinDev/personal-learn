@@ -1,5 +1,7 @@
 ---
 import Base from './Base.astro';
+import Speech from '../components/Speech.astro';
+import { ipaMap } from '../lib/ipa';
 import { formatDate, kindLabel, type Page, type Topic } from '../lib/site';
 
 interface Props { page: Page; topic: Topic }
@@ -10,6 +12,7 @@ const at = siblings.findIndex((p) => p.slug === page.slug);
 const prev = page.kind === 'lessons' ? siblings[at - 1] : undefined;
 const next = page.kind === 'lessons' ? siblings[at + 1] : undefined;
 const position = page.kind === 'lessons' ? `${at + 1} / ${siblings.length}` : 'Reference';
+const ipa = ipaMap([page.title, page.lead, page.entry.body ?? ''].join(' '));
 const meta = [formatDate(page.date), page.updated && `updated ${formatDate(page.updated)}`, data.minutes && `${data.minutes} min`, data.summary]
   .filter(Boolean)
   .join(' · ');
@@ -55,4 +58,5 @@ const meta = [formatDate(page.date), page.updated && `updated ${formatDate(page.
     </p>
     {page.kind === 'lessons' && <p class="ask">Anything unclear? Ask your tutor a follow-up question.</p>}
   </footer>
+  <Speech ipa={ipa} />
 </Base>

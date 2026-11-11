@@ -1,0 +1,275 @@
+---
+// Tap a word for its US IPA and pronunciation; play any paragraph. Speech: Volcano Engine TTS
+// called from the browser with the reader's own credentials, or the system voice.
+interface Props { ipa: Record<string, string> }
+const { ipa } = Astro.props;
+const speaker = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+---
+<script type="application/json" id="ipa-data" set:html={JSON.stringify(ipa)} />
+
+<div class="say" role="dialog" aria-label="Pronunciation" hidden data-say>
+  <div class="say-head">
+    <strong data-say-word></strong>
+    <button class="say-play" type="button" aria-label="Play" data-say-play set:html={speaker} />
+  </div>
+  <p class="say-ipa" data-say-ipa></p>
+  <p class="say-gloss" data-say-gloss></p>
+  <p class="say-error" data-say-error></p>
+  <button class="say-link" type="button" data-say-settings>Voice settings</button>
+</div>
+
+<p class="say-toast" role="status" hidden data-say-toast></p>
+
+<dialog class="say-dialog" data-say-dialog>
+  <form method="dialog">
+    <h2>Voice</h2>
+    <p>Pronunciation uses Volcano Engine TTS with your own App ID and Access Token. They are kept only in this browser and sent only to Volcano Engine.</p>
+    <label>App ID<input name="appId" autocomplete="off" spellcheck="false"></label>
+    <label>Access Token<input name="token" type="password" autocomplete="off"></label>
+    <label>Voice<input name="voice" autocomplete="off" spellcheck="false"></label>
+    <div class="say-actions">
+      <button value="system" type="submit">Use system voice</button>
+      <button value="clear" type="submit">Clear</button>
+      <button value="save" type="submit" class="primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<template id="say-para"><button class="say-para" type="button" aria-label="Play paragraph" set:html={speaker} /></template>
+
+<script>
+  const ENDPOINT = 'https://openspeech.bytedance.com/api/v3/tts/unidirectional';
+  const DEFAULT_VOICE = 'en_male_tim_uranus_bigtts';
+  const STORE = 'learn.voice';
+  type Settings = { mode: 'volcano' | 'system'; appId?: string; token?: string; voice?: string };
+
+  const ipa: Record<string, string> = JSON.parse(document.getElementById('ipa-data')?.textContent || '{}');
+  const prose = document.querySelector<HTMLElement>('.prose');
+  const pop = document.querySelector<HTMLElement>('[data-say]')!;
+  const dialog = document.querySelector<HTMLDialogElement>('[data-say-dialog]')!;
+  const toast = document.querySelector<HTMLElement>('[data-say-toast]')!;
+  const $ = (name: string) => pop.querySelector<HTMLElement>(`[data-say-${name}]`)!;
+
+  function load(): Settings | null {
+    try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch { return null; }
+  }
+  function store(s: Settings | null) {
+    try { s ? localStorage.setItem(STORE, JSON.stringify(s)) : localStorage.removeItem(STORE); } catch {}
+  }
+
+  // Playback. The AudioContext is unlocked inside the tap, so audio may start after the request.
+  let ctx: AudioContext | undefined;
+  let current: { stop(): void } | undefined;
+  let busy: HTMLElement | undefined;
+  const unlock = () => {
+    ctx ??= new AudioContext();
+    if (ctx.state === 'suspended') ctx.resume();
+  };
+  function stop() {
+    current?.stop();
+    current = undefined;
+    speechSynthesis?.cancel();
+    busy?.classList.remove('is-playing', 'is-loading');
+    busy = undefined;
+  }
+
+  const speakable = (text: string) =>
+    text.replace(/[（(][^）)]*[㐀-鿿][^）)]*[）)]/g, '').replace(/[㐀-鿿　-〿＀-￯]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+  async function volcano(text: string, s: Settings) {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-App-Key': s.appId!,
+        'X-Api-Access-Key': s.token!,
+        'X-Api-Resource-Id': 'seed-tts-2.0',
+        'X-Api-Request-Id': crypto.randomUUID(),
+      },
+      body: JSON.stringify({
+        req_params: {
+          text,
+          speaker: s.voice || DEFAULT_VOICE,
+          audio_params: { format: 'mp3', sample_rate: 24000 },
+          additions: JSON.stringify({ explicit_language: 'en' }),
+        },
+      }),
+    });
+    const body = await res.text();
+    const chunks: Uint8Array[] = [];
+    for (const line of body.split('\n')) {
+      if (!line.trim()) continue;
+      let msg: { code?: number; message?: string; data?: string; header?: { code?: number; message?: string } };
+      try { msg = JSON.parse(line); } catch { continue; }
+      const code = msg.code ?? msg.header?.code;
+      if (res.status === 401 || res.status === 403) throw new Error('check your App ID and Access Token in Voice settings.');
+      if (code && code !== 20000000) throw new Error(msg.message || msg.header?.message || `error ${code}`);
+      if (msg.data) chunks.push(Uint8Array.from(atob(msg.data), (c) => c.charCodeAt(0)));
+    }
+    if (!res.ok) throw new Error(res.headers.get('X-Api-Message') || `HTTP ${res.status}`);
+    if (!chunks.length) throw new Error('No audio returned');
+    const bytes = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0));
+    let at = 0;
+    for (const c of chunks) { bytes.set(c, at); at += c.length; }
+    return bytes.buffer;
+  }
+
+  function systemVoice(text: string, done: () => void) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    const voices = speechSynthesis.getVoices().filter((v) => v.lang === 'en-US');
+    u.voice = voices.find((v) => /enhanced|premium|natural|google/i.test(v.name)) ?? voices[0] ?? null;
+    u.onend = u.onerror = done;
+    speechSynthesis.speak(u);
+    current = { stop: () => speechSynthesis.cancel() };
+  }
+
+  let pending: { text: string; button: HTMLElement; report: (m: string) => void } | undefined;
+
+  async function play(text: string, button: HTMLElement, report: (m: string) => void) {
+    const wasPlaying = busy === button;
+    stop();
+    if (wasPlaying) return;
+    const s = load();
+    if (!s) {
+      pending = { text, button, report };
+      openSettings();
+      return;
+    }
+    busy = button;
+    const done = () => { if (busy === button) stop(); };
+    if (s.mode === 'system') {
+      button.classList.add('is-playing');
+      systemVoice(text, done);
+      return;
+    }
+    button.classList.add('is-loading');
+    try {
+      const audio = await ctx!.decodeAudioData(await volcano(text, s));
+      if (busy !== button) return;
+      const source = ctx!.createBufferSource();
+      source.buffer = audio;
+      source.connect(ctx!.destination);
+      source.onended = done;
+      source.start();
+      current = { stop: () => { source.onended = null; source.stop(); } };
+      button.classList.replace('is-loading', 'is-playing');
+    } catch (e) {
+      done();
+      report(`Couldn't play: ${(e as Error).message}`);
+    }
+  }
+
+  function openSettings() {
+    const s = load();
+    const form = dialog.querySelector('form')!;
+    (form.elements.namedItem('appId') as HTMLInputElement).value = s?.appId ?? '';
+    (form.elements.namedItem('token') as HTMLInputElement).value = s?.token ?? '';
+    (form.elements.namedItem('voice') as HTMLInputElement).value = s?.voice ?? DEFAULT_VOICE;
+    dialog.showModal();
+  }
+  dialog.addEventListener('close', () => {
+    const form = dialog.querySelector('form')!;
+    const value = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+    if (dialog.returnValue === 'save' && value('appId') && value('token')) {
+      store({ mode: 'volcano', appId: value('appId'), token: value('token'), voice: value('voice') || DEFAULT_VOICE });
+    } else if (dialog.returnValue === 'system') {
+      store({ mode: 'system' });
+    } else if (dialog.returnValue === 'clear') {
+      store(null);
+    }
+    const next = pending;
+    pending = undefined;
+    if (next && load()) play(next.text, next.button, next.report);
+  });
+
+  // Word popover.
+  const highlight = 'highlights' in CSS ? new Highlight() : undefined;
+  if (highlight) CSS.highlights.set('say', highlight);
+  let word = '';
+
+  function closePopover() {
+    pop.hidden = true;
+    highlight?.clear();
+    if (busy === $('play')) stop();
+  }
+
+  function wordAt(x: number, y: number) {
+    const doc = document as Document & { caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null };
+    const pos = doc.caretPositionFromPoint?.(x, y);
+    const node = pos ? pos.offsetNode : document.caretRangeFromPoint?.(x, y)?.startContainer;
+    const offset = pos ? pos.offset : document.caretRangeFromPoint?.(x, y)?.startOffset ?? 0;
+    if (!node || node.nodeType !== Node.TEXT_NODE) return;
+    const text = node.textContent || '';
+    const isLetter = (c: string) => /[A-Za-z'’]/.test(c);
+    let start = offset;
+    let end = offset;
+    while (start > 0 && isLetter(text[start - 1])) start--;
+    while (end < text.length && isLetter(text[end])) end++;
+    const value = text.slice(start, end).replace(/^['’]+|['’]+$/g, '');
+    if (!/[A-Za-z]/.test(value)) return;
+    const range = document.createRange();
+    range.setStart(node, start);
+    range.setEnd(node, end);
+    const rect = range.getBoundingClientRect();
+    if (x < rect.left - 2 || x > rect.right + 2 || y < rect.top - 2 || y > rect.bottom + 2) return;
+    const gloss = text.slice(end).match(/^\s*（([^）]+)）/)?.[1];
+    return { value, range, rect, gloss };
+  }
+
+  prose?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest('a, button, summary, input, iframe')) return;
+    if (!document.getSelection()?.isCollapsed) return;
+    const hit = wordAt(event.clientX, event.clientY);
+    if (!hit) return closePopover();
+    word = hit.value;
+    $('word').textContent = word;
+    const key = word.toLowerCase().replace(/’/g, "'");
+    const sound = ipa[key] ?? ipa[key.replace(/'s$/, '')];
+    $('ipa').textContent = sound ? `/${sound}/` : '';
+    $('ipa').hidden = !sound;
+    $('gloss').textContent = hit.gloss ?? '';
+    $('gloss').hidden = !hit.gloss;
+    $('error').textContent = '';
+    $('error').hidden = true;
+    highlight?.clear();
+    highlight?.add(hit.range);
+    pop.hidden = false;
+    const width = pop.offsetWidth;
+    const left = Math.min(Math.max(8, hit.rect.left), document.documentElement.clientWidth - width - 8);
+    pop.style.left = `${left + scrollX}px`;
+    pop.style.top = `${hit.rect.bottom + scrollY + 8}px`;
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (!pop.hidden && !target.closest('[data-say], .prose')) closePopover();
+  });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closePopover(); });
+
+  $('play').addEventListener('click', () => {
+    unlock();
+    play(word, $('play'), (message) => { $('error').textContent = message; $('error').hidden = false; });
+  });
+  $('settings').addEventListener('click', () => { closePopover(); openSettings(); });
+
+  // Paragraph buttons.
+  let toastTimer: number | undefined;
+  const showToast = (message: string) => {
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => { toast.hidden = true; }, 5000);
+  };
+  const template = document.getElementById('say-para') as HTMLTemplateElement;
+  prose?.querySelectorAll<HTMLElement>('p, li').forEach((block) => {
+    if (block.closest('table, .label, .foot, .stats, summary') || block.querySelector('p, li')) return;
+    if (block.matches('.label, .foot')) return;
+    const text = speakable(block.textContent || '');
+    if (text.split(' ').length < 4) return;
+    const button = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    button.addEventListener('click', () => { unlock(); play(text, button, showToast); });
+    block.append(' ', button);
+  });
+</script>
